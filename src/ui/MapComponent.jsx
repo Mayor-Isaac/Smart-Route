@@ -115,7 +115,7 @@ const roadData = [
 //   L.control.zoom({ position: 'topright' }).addTo(Map);
 //   return null;
 // }
-const Map = () => {
+const MapComponent = () => {
   const { lat, lng } = roadData[0];
   return (
     <MapContainer
@@ -171,4 +171,4 @@ const Map = () => {
   );
 };
 
-export default Map;
+export default MapComponent;

@@ -1,16 +1,32 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import SearchOrder from '../Features/order/SearchOrder';
-import UserName from '../Features/user/UserName';
+import { HiMenu } from "react-icons/hi";
 
 export default function Header() {
+  const currHour = new Date().getHours();
+  const greetings =
+    currHour < 12
+      ? 'Morning'
+      : currHour >= 12 && currHour < 17
+      ? 'Afternoon'
+        : 'Evening';
+  
+  // <div className="flex items-center justify-between border-b border-green-400 px-4 py-3 text-green-600">
+  //   <h1 className=" text-base font-bold uppercase">Smart Route</h1>
+  //   <Close closeBar={closeBar} />
+  // </div>;
   return (
-    <header className="flex items-center justify-between border-b  border-stone-200 bg-yellow-500 px-4 py-3 uppercase sm:px-6">
-      <Link to="/" className="tracking-widest">
-        Fast React Pizza Co.
-      </Link>
-      <SearchOrder />
-      <UserName />
-    </header>
+    <div className="flex items-center justify-between border border-green-500 px-2  py-4 ">
+      <h1 className=" text-base font-bold uppercase">Smart Route</h1>
+      <div className="flex items-center gap-20">
+        <p>
+          Good {greetings}{' '}
+          <span className="font-bold text-green-500">Feranmi,</span>
+        </p>
+        <div
+          className="cursor-pointer font-bold text-green-500"
+        >
+          <HiMenu />
+        </div>
+      </div>
+    </div>
   );
 }
