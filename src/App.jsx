@@ -11,9 +11,9 @@ export default function App() {
       <BrowserRouter>
         <Routes>
             <Route index element={<Home />} />
-          {/* <Route path="/" element={<AppLayout />}> */}
+          <Route path="/home" element={<AppLayout />}>
             <Route path="map" element={<Map />} />
-          {/* </Route > */}
+          </Route >
         </Routes>
       </BrowserRouter>
     </div>
