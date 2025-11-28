@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import MapComponent from '../../ui/MapComponent';
 import Sidebar from '../../ui/Sidebar';
 import { HiMenu } from 'react-icons/hi';
+import GoogleMaps from '../../ui/GoogleMaps';
+import MapViewer from '../../ui/MapViewer';
 
 export default function Map() {
   const [showMenu, setShowMenu] = useState(true);
@@ -10,11 +12,8 @@ export default function Map() {
   };
 
   return (
-    <>
-      
       <div className="">
-        <MapComponent />
+        <MapViewer />
       </div>
-    </>
   );
 }

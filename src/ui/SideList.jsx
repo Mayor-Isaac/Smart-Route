@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-
 import Close from './Close';
 
-export default function SideList({ closeBar }) {
+export default function SideList({ closeSidebar }) {
   const [showAlt, setShowAlt] = useState(false);
   const [currLocation, setCurrentLocation] = useState('');
   const [destination, setDestination] = useState('');
@@ -39,17 +38,30 @@ export default function SideList({ closeBar }) {
       navItems: ['Contact', 'About'],
     },
   ];
-  // const isComplete = currLocation === '' && destination === '';
-  // alert(isComplete);
 
   function handleLocation(e) {
-    e.preventDefault();
+    const { name, value } = e.target;
 
-    e.target.name === 'Current Location'
-      ? setCurrentLocation(e.target.value)
-      : setDestination(e.target.value);
+    if (name === 'Current Location') {
+      setCurrentLocation(value);
+      setIsComplete(value !== '' && destination !== '');
+    } else {
+      setDestination(value);
+      setIsComplete(currLocation !== '' && value !== '');
+    }
+  }
 
-    setIsComplete(currLocation !== '' && destination !== '');
+  function handleStartJourney() {
+    if (isComplete) {
+      setIsActivate(true);
+    }
+  }
+
+  function handleRouteSelect() {
+    setShowAlt(false);
+    if (closeSidebar) {
+      closeSidebar();
+    }
   }
 
   return (
@@ -67,9 +79,7 @@ export default function SideList({ closeBar }) {
                 onClick={
                   item.header === 'Alternative Routes' && isActivate
                     ? () => setShowAlt(!showAlt)
-                    : () => {
-                        console.log('.');
-                      }
+                    : undefined
                 }
               >
                 {item.header}
@@ -85,7 +95,7 @@ export default function SideList({ closeBar }) {
                     value={
                       input === 'Current Location' ? currLocation : destination
                     }
-                    className="my-2 rounded border border-green-400 p-2 font-bold text-green-600 outline-none"
+                    className="my-2 w-full rounded border border-green-400 p-2 font-bold text-green-600 outline-none"
                     onChange={handleLocation}
                   />
                 </div>
@@ -95,18 +105,11 @@ export default function SideList({ closeBar }) {
               <button
                 className={`mx-auto my-2 block rounded-lg border p-3 text-green-500 transition ${
                   isComplete
-                    ? 'border-green-500 hover:bg-green-500  hover:text-green-50'
-                    : 'cursor-not-allowed bg-gray-400 text-white'
+                    ? 'border-green-500 hover:bg-green-500 hover:text-green-50'
+                    : 'cursor-not-allowed border-gray-400 bg-gray-400 text-white'
                 }`}
-                onClick={
-                  isComplete
-                    ? () => {
-                        setIsActivate(true);
-                      }
-                    : () => {
-                        console.log('.');
-                      }
-                }
+                onClick={handleStartJourney}
+                disabled={!isComplete}
               >
                 {item.button}
               </button>
@@ -129,8 +132,8 @@ export default function SideList({ closeBar }) {
                 />
                 {item.routes.map((route, key) => {
                   return (
-                    <div key={key} onClick={{ closeBar }}>
-                      <p className="my-2 cursor-pointer text-green-600 transition hover:font-bold  hover:underline">
+                    <div key={key} onClick={handleRouteSelect}>
+                      <p className="my-2 cursor-pointer text-green-600 transition hover:font-bold hover:underline">
                         {route}
                       </p>
                     </div>

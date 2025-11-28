@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   FaBars,
   FaArrowRight,
@@ -16,7 +16,8 @@ import {
   FaInstagram,
   FaLinkedin,
   FaEnvelope,
-  FaTimes
+  FaTimes,
+  FaArrowUp
 } from 'react-icons/fa'
 import { GoArrowUpRight } from "react-icons/go";
 import { Link } from 'react-router-dom';
@@ -25,12 +26,52 @@ import { homeData } from './data';
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [expandedTestimonials, setExpandedTestimonials] = useState({})
+  const [showScrollTop, setShowScrollTop] = useState(false)
 
   const toggleTestimonial = (index) => {
     setExpandedTestimonials(prev => ({
       ...prev,
       [index]: !prev[index]
     }))
+  }
+
+  // Show/hide scroll to top button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollTop(true)
+      } else {
+        setShowScrollTop(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  // Smooth scroll for anchor links
+  const handleSmoothScroll = (e, targetId) => {
+    e.preventDefault()
+    const target = document.querySelector(targetId)
+    if (target) {
+      const headerOffset = 80 // Height of fixed header
+      const elementPosition = target.getBoundingClientRect().top
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      })
+    }
+    setIsMenuOpen(false)
   }
 
   return (
@@ -52,25 +93,25 @@ export default function Home() {
           <nav className="hidden md:block">
             <ul className="flex list-none items-center gap-8">
               <li>
-                <Link
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
-                  to="/"
+                <a
+                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  onClick={scrollToTop}
                 >
                   Home
-                </Link>
+                </a>
               </li>
               <li>
                 <a
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
-                  href="#feature"
+                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  onClick={(e) => handleSmoothScroll(e, '#feature')}
                 >
                   About
                 </a>
               </li>
               <li>
                 <a
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
-                  href="#footer"
+                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  onClick={(e) => handleSmoothScroll(e, '#footer')}
                 >
                   Contact
                 </a>
@@ -86,28 +127,25 @@ export default function Home() {
           >
             <ul className="flex list-none flex-col items-center gap-6 py-6">
               <li>
-                <Link
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
-                  to="/"
-                  onClick={() => setIsMenuOpen(false)}
+                <a
+                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  onClick={scrollToTop}
                 >
                   Home
-                </Link>
+                </a>
               </li>
               <li>
                 <a
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
-                  href="#feature"
-                  onClick={() => setIsMenuOpen(false)}
+                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  onClick={(e) => handleSmoothScroll(e, '#feature')}
                 >
                   About
                 </a>
               </li>
               <li>
                 <a
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
-                  href="#footer"
-                  onClick={() => setIsMenuOpen(false)}
+                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  onClick={(e) => handleSmoothScroll(e, '#footer')}
                 >
                   Contact
                 </a>
@@ -148,8 +186,11 @@ export default function Home() {
               >
                 Get Started
               </Link>
-              <button className="flex items-center gap-2 rounded-md bg-[#39ff14] px-6 py-3 text-xl text-white transition hover:bg-white hover:text-[#39ff14]">
-                <a href="#feature">Read More</a>
+              <button 
+                className="flex items-center gap-2 rounded-md bg-[#39ff14] px-6 py-3 text-xl text-white transition hover:bg-white hover:text-[#39ff14]"
+                onClick={(e) => handleSmoothScroll(e, '#feature')}
+              >
+                Read More
                 <FaArrowRight />
               </button>
             </div>
@@ -522,6 +563,17 @@ export default function Home() {
           &copy; 2025 Copyright SmartRoute Services
         </p>
       </footer>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[#37ff14ba] text-white shadow-lg transition hover:bg-[#004225] hover:scale-110"
+          aria-label="Scroll to top"
+        >
+          <FaArrowUp className="text-xl" />
+        </button>
+      )}
     </>
   );
 }
