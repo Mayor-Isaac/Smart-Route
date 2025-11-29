@@ -134,7 +134,6 @@ export default function PastJourneys() {
         <JourneyDetails
           journey={selectedRowData}
           closeModal={() => setShowDetails(false)}
-          getLocationName={getLocationName}
           formatTimeStamp={formatTimeStamp}
         />
       )}
@@ -143,7 +142,35 @@ export default function PastJourneys() {
 }
 
 
-const JourneyDetails = ({ journey, closeModal, getLocationName, formatTimeStamp }) => {
+const JourneyDetails = ({ journey, closeModal, formatTimeStamp }) => {
+  const [originName, setOriginName] = useState('')
+  const [destinationName, setDestinationName] = useState('')
+
+  // Fetch location names when component mounts
+  useEffect(() => {
+    const fetchLocationNames = async () => {
+      try {
+        // Get origin name
+        const originResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${journey.origin.lat}&lon=${journey.origin.lng}`);
+        const originData = await originResponse.json();
+        const originDisplayName = originData.display_name || `${journey.origin.lat.toFixed(4)}, ${journey.origin.lng.toFixed(4)}`;
+        setOriginName(originDisplayName.split(',')[0] || originDisplayName);
+
+        // Get destination name
+        const destResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${journey.destination.lat}&lon=${journey.destination.lng}`);
+        const destData = await destResponse.json();
+        const destDisplayName = destData.display_name || `${journey.destination.lat.toFixed(4)}, ${journey.destination.lng.toFixed(4)}`;
+        setDestinationName(destDisplayName.split(',')[0] || destDisplayName);
+      } catch (error) {
+        console.error('Error fetching location names:', error);
+        setOriginName(`${journey.origin.lat.toFixed(4)}, ${journey.origin.lng.toFixed(4)}`);
+        setDestinationName(`${journey.destination.lat.toFixed(4)}, ${journey.destination.lng.toFixed(4)}`);
+      }
+    };
+
+    fetchLocationNames();
+  }, [journey]);
+
   console.log("Journey:", journey)
   return (
     <div className="fixed inset-0 z-[500000] flex  items-start justify-end rounded-[4px] bg-black/20 backdrop-blur-sm">
@@ -159,7 +186,7 @@ const JourneyDetails = ({ journey, closeModal, getLocationName, formatTimeStamp 
             <div className="flex-1">
               <div className="">
                 Start Location:
-                <strong>{getLocationName(journey.origin.lat, journey.origin.lng) || ""}</strong>
+                <strong> {originName || `${journey.origin.lat},${journey.origin.lng}`}</strong>
               </div>
 
               <div className="">
@@ -172,10 +199,7 @@ const JourneyDetails = ({ journey, closeModal, getLocationName, formatTimeStamp 
               <div className="">
                 Destination:{' '}
                 <strong>
-                  {getLocationName(
-                    journey.destination.lat,
-                    journey.destination.lng
-                  ) || ''}
+                  {destinationName || `${journey.destination.lat},${journey.destination.lng}`}
                 </strong>
               </div>
 
