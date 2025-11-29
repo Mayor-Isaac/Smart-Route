@@ -48,7 +48,7 @@ const FreeDirectionsPanel = ({ route, anomalies = [] }) => {
       )}
 
       {/* Directions List */}
-      <div className="max-h-80 overflow-y-auto">
+      {/* <div className="max-h-80 overflow-y-auto">
         <div className="space-y-3 p-4">
           {route.steps.map((step, index) => (
             <div
@@ -80,7 +80,7 @@ const FreeDirectionsPanel = ({ route, anomalies = [] }) => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

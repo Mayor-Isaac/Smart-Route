@@ -7,14 +7,14 @@ export default function Sidebar({ isOpen, closeSidebar }) {
       {/* Overlay for mobile */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-[40000] md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-[50000] md:hidden"
           onClick={closeSidebar}
         />
       )}
       
       {/* Sidebar */}
       <div
-        className={`fixed md:relative top-0 left-0 h-full w-72 border bg-gray-100 transition-transform duration-300 z-50 overflow-auto md:translate-x-0 ${
+        className={`fixed md:relative top-0 left-0 h-full w-72 border bg-gray-100 transition-transform duration-300 z-[60000] overflow-auto md:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:block`}
       >

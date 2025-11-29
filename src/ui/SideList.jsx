@@ -137,6 +137,11 @@ export default function SideList({ closeSidebar }) {
         },
       })
     );
+    
+    // Close sidebar after starting journey
+    if (closeSidebar) {
+      closeSidebar();
+    }
   }
 
   function handleRouteSelect() {
