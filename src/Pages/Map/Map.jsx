@@ -13,7 +13,7 @@ export default function Map() {
   };
 
   return (
-    <div className="">
+    <div className="border border-red-500">
       {/* <MapViewer /> */}
       <FreeNavigationMap />
     </div>

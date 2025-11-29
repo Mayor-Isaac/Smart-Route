@@ -81,14 +81,6 @@ const FreeDirectionsPanel = ({ route, anomalies = [] }) => {
           ))}
         </div>
       </div>
-
-      {/* Footer */}
-      {/* <div className="border-t bg-gray-50 p-3">
-        <div className="flex items-center justify-between text-xs text-gray-600">
-          <span>Powered by OSRM</span>
-          <span>OpenStreetMap</span>
-        </div>
-      </div> */}
     </div>
   );
 };

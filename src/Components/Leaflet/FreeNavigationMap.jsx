@@ -1,5 +1,5 @@
 // components/FreeNavigationMap.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -26,6 +26,27 @@ const FreeNavigationMap = () => {
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
   const [route, setRoute] = useState(null);
+    // On mount: attempt to set startPoint to the user's current location and center the map
+    useEffect(() => {
+      if (!('geolocation' in navigator)) return;
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          const current = [latitude, longitude];
+          setStartPoint(current);
+          // Also emit to any listeners (optional coherence with sidebar event flow)
+          window.dispatchEvent(
+            new CustomEvent('smartroute:set-points', {
+              detail: { origin: { lat: latitude, lng: longitude }, destination: null },
+            })
+          );
+        },
+        () => {
+          // silently ignore errors; map will use default center
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      );
+    }, []);
   const [anomalies, setAnomalies] = useState([
     {
       id: 1,
@@ -148,7 +169,7 @@ const FreeNavigationMap = () => {
   return (
     <div className="relative h-screen w-full">
       <MapContainer
-        center={[37.7749, -122.4194]}
+        center={startPoint || [7.300339, 5.138027]}
         zoom={13}
         className="h-full w-full"
         // Map clicks disabled; points come from Sidebar via event
@@ -159,16 +180,10 @@ const FreeNavigationMap = () => {
         />
 
         {/* Start Marker */}
-        {startPoint && (
-          <Marker position={startPoint}>
-          </Marker>
-        )}
+        {startPoint && <Marker position={startPoint}></Marker>}
 
         {/* End Marker */}
-        {endPoint && (
-          <Marker position={endPoint}>
-          </Marker>
-        )}
+        {endPoint && <Marker position={endPoint}></Marker>}
 
         {/* Route Line */}
         {route && (
@@ -235,7 +250,10 @@ const FreeNavigationMap = () => {
       </MapContainer>
 
       {/* Control Panel */}
-      <div className="absolute left-4 top-4 z-[1000] max-w-xs rounded-lg bg-white p-4 shadow-xl">
+      <div className="absolute right-4 top-4 z-[1000] rounded-lg bg-white p-2 text-[12px] shadow-xl">
+              {!startPoint && !endPoint ? <p>Select the current location and the destination in the menu.</p>: <p>Enjoy your trip</p>}
+      </div>
+      {/* <div className="absolute left-4 top-4 z-[1000] max-w-xs rounded-lg bg-white p-4 shadow-xl">
         <div className="mb-3 flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500">
             <span className="font-bold text-white">🛣️</span>
@@ -294,7 +312,7 @@ const FreeNavigationMap = () => {
             </button>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* Directions Panel */}
       <FreeDirectionsPanel route={route} anomalies={anomalies} />
