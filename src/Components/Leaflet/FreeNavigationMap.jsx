@@ -78,21 +78,35 @@ const FreeNavigationMap = () => {
     }
   };
 
-  const handleMapClick = (e) => {
-    const { lat, lng } = e.latlng;
-    const position = [lat, lng];
+  // Listen for coordinates coming from the sidebar via a custom event
+  React.useEffect(() => {
+    const handler = (ev) => {
+      const detail = ev.detail || {};
+      const origin = detail.origin;
+      const destination = detail.destination;
 
-    if (!startPoint) {
-      setStartPoint(position);
-    } else if (!endPoint) {
-      setEndPoint(position);
-      getRoute(startPoint, position);
-    } else {
-      setStartPoint(position);
-      setEndPoint(null);
-      setRoute(null);
-    }
-  };
+      // origin/destination can be { lat, lng } arrays or objects
+      const toLatLngArray = (val) => {
+        if (!val) return null;
+        if (Array.isArray(val) && val.length === 2) return [val[0], val[1]];
+        if (typeof val === 'object' && 'lat' in val && 'lng' in val) return [val.lat, val.lng];
+        return null;
+      };
+
+      const originArr = toLatLngArray(origin);
+      const destArr = toLatLngArray(destination);
+
+      if (originArr) setStartPoint(originArr);
+      if (destArr) setEndPoint(destArr);
+
+      if (originArr && destArr) {
+        getRoute(originArr, destArr);
+      }
+    };
+
+    window.addEventListener('smartroute:set-points', handler);
+    return () => window.removeEventListener('smartroute:set-points', handler);
+  }, []);
 
   const getAnomalyStyles = (severity) => {
     const baseStyles =
@@ -137,7 +151,7 @@ const FreeNavigationMap = () => {
         center={[37.7749, -122.4194]}
         zoom={13}
         className="h-full w-full"
-        onClick={handleMapClick}
+        // Map clicks disabled; points come from Sidebar via event
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -147,22 +161,12 @@ const FreeNavigationMap = () => {
         {/* Start Marker */}
         {startPoint && (
           <Marker position={startPoint}>
-            <Popup>
-              <div className="text-center">
-                <div className="font-semibold text-blue-600">Start Point</div>
-              </div>
-            </Popup>
           </Marker>
         )}
 
         {/* End Marker */}
         {endPoint && (
           <Marker position={endPoint}>
-            <Popup>
-              <div className="text-center">
-                <div className="font-semibold text-red-600">End Point</div>
-              </div>
-            </Popup>
           </Marker>
         )}
 

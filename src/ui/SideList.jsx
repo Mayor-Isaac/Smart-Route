@@ -6,8 +6,8 @@ export default function SideList({ closeSidebar }) {
   const [currLocation, setCurrentLocation] = useState('');
   const [destination, setDestination] = useState('');
   const [isComplete, setIsComplete] = useState(false);
-  const [isActivate, setIsActivate] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isActivate, setIsActivate] = useState(false);
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
 
@@ -70,10 +70,71 @@ export default function SideList({ closeSidebar }) {
     }
   }
 
-  function handleStartJourney() {
-    if (isComplete) {
-      setIsActivate(true);
+  // Action: Use current device location to fill "Current Location"
+  async function handleUseCurrentLocation() {
+    if (!('geolocation' in navigator)) {
+      alert('Geolocation not supported on this device/browser.');
+      return;
     }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const formatted = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+        setUserLocation({ lat: latitude, lng: longitude });
+        setCurrentLocation(formatted);
+        setIsComplete(formatted !== '' && destination !== '');
+
+        // Immediately dispatch origin to map so it can center/prepare routing
+        window.dispatchEvent(
+          new CustomEvent('smartroute:set-points', {
+            detail: {
+              origin: { lat: latitude, lng: longitude },
+              destination: null,
+            },
+          })
+        );
+      },
+      (err) => {
+        const msg = err.code === err.PERMISSION_DENIED
+          ? 'Location permission denied. Please allow access.'
+          : err.code === err.POSITION_UNAVAILABLE
+          ? 'Location unavailable. Try again later.'
+          : err.code === err.TIMEOUT
+          ? 'Location request timed out.'
+          : 'Failed to get location.';
+        alert(msg);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  }
+
+  function handleStartJourney() {
+    if (!isComplete) return;
+    setIsActivate(true);
+
+    // Try to parse "lat,lng" formats; otherwise dispatch names for geocoding elsewhere
+    const parseLatLng = (text) => {
+      if (!text) return null;
+      const parts = text.split(',').map((s) => s.trim());
+      if (parts.length === 2) {
+        const lat = parseFloat(parts[0]);
+        const lng = parseFloat(parts[1]);
+        if (!Number.isNaN(lat) && !Number.isNaN(lng)) return { lat, lng };
+      }
+      return null;
+    };
+
+    const originCoord = parseLatLng(currLocation);
+    const destCoord = parseLatLng(destination);
+
+    window.dispatchEvent(
+      new CustomEvent('smartroute:set-points', {
+        detail: {
+          origin: originCoord ? originCoord : currLocation ? { name: currLocation } : null,
+          destination: destCoord ? destCoord : destination ? { name: destination } : null,
+        },
+      })
+    );
   }
 
   function handleRouteSelect() {
@@ -185,6 +246,15 @@ export default function SideList({ closeSidebar }) {
                     className="my-2 w-full rounded border border-green-400 p-2 font-bold text-green-600 outline-none"
                     onChange={handleLocation}
                   />
+                    {input === 'Current Location' && (
+                      <button
+                        type="button"
+                        onClick={handleUseCurrentLocation}
+                        className="text-xs font-semibold text-green-600 hover:underline"
+                      >
+                        Use current location
+                      </button>
+                    )}
                 </div>
               );
             })}
