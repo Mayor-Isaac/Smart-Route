@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaCrown } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
 import Close from './Close';
+import { useNavigate } from 'react-router-dom';
 
 export default function SideList({ closeSidebar }) {
   const [showAlt, setShowAlt] = useState(false);
@@ -13,6 +14,8 @@ export default function SideList({ closeSidebar }) {
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [lastSeenLocationName, setLastSeenLocationName] = useState(null);
+
+  const navigate = useNavigate()
 
   // Check for saved theme preference or default to light mode
   useEffect(() => {
@@ -58,7 +61,7 @@ export default function SideList({ closeSidebar }) {
     },
     {
       header: 'Help',
-      navItems: ['Contact', 'About'],
+      navItems: ['About'],
     },
   ];
 
@@ -86,6 +89,29 @@ export default function SideList({ closeSidebar }) {
     } catch (error) {
       console.error('Error getting location name:', error);
       return 'Unknown location';
+    }
+  };
+
+  // Forward geocoding to get coordinates from location name
+  const geocodeLocation = async (locationName) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationName)}&limit=1&countrycodes=ng`
+      );
+      const data = await response.json();
+      
+      if (data && data.length > 0) {
+        const result = data[0];
+        return {
+          lat: parseFloat(result.lat),
+          lng: parseFloat(result.lon),
+          display_name: result.display_name
+        };
+      }
+      return null;
+    } catch (error) {
+      console.error('Error geocoding location:', error);
+      return null;
     }
   };
 
@@ -144,11 +170,11 @@ export default function SideList({ closeSidebar }) {
     );
   }
 
-  function handleStartJourney() {
+  async function handleStartJourney() {
     if (!isComplete) return;
     setIsActivate(true);
 
-    // Try to parse "lat,lng" formats; otherwise dispatch names for geocoding elsewhere
+    // Try to parse "lat,lng" formats first
     const parseLatLng = (text) => {
       if (!text) return null;
       const parts = text.split(',').map((s) => s.trim());
@@ -160,14 +186,42 @@ export default function SideList({ closeSidebar }) {
       return null;
     };
 
-    const originCoord = parseLatLng(currLocation);
-    const destCoord = parseLatLng(destination);
+    let originCoord = parseLatLng(currLocation);
+    let destCoord = parseLatLng(destination);
 
+    // If not coordinates, try geocoding the location names
+    if (!originCoord && currLocation) {
+      toast.loading('Finding origin location...', { id: 'geocode-origin' });
+      const geocoded = await geocodeLocation(currLocation);
+      if (geocoded) {
+        originCoord = { lat: geocoded.lat, lng: geocoded.lng };
+        toast.success(`Found: ${geocoded.display_name.split(',')[0]}`, { id: 'geocode-origin' });
+      } else {
+        toast.error('Could not find origin location. Try being more specific.', { id: 'geocode-origin' });
+        setIsActivate(false);
+        return;
+      }
+    }
+
+    if (!destCoord && destination) {
+      toast.loading('Finding destination...', { id: 'geocode-dest' });
+      const geocoded = await geocodeLocation(destination);
+      if (geocoded) {
+        destCoord = { lat: geocoded.lat, lng: geocoded.lng };
+        toast.success(`Found: ${geocoded.display_name.split(',')[0]}`, { id: 'geocode-dest' });
+      } else {
+        toast.error('Could not find destination. Try being more specific.', { id: 'geocode-dest' });
+        setIsActivate(false);
+        return;
+      }
+    }
+
+    // Dispatch coordinates to the map
     window.dispatchEvent(
       new CustomEvent('smartroute:set-points', {
         detail: {
-          origin: originCoord ? originCoord : currLocation ? { name: currLocation } : null,
-          destination: destCoord ? destCoord : destination ? { name: destination } : null,
+          origin: originCoord,
+          destination: destCoord,
         },
       })
     );
@@ -199,12 +253,22 @@ export default function SideList({ closeSidebar }) {
     }
   }
 
+  function handleAboutClick() {
+      navigate('/');
+  }
+
+  function handleGeneralAnomaliesClick() {
+    navigate('/home/all-anomalies');
+    closeSidebar();
+  }
+
   // Request location permission and get current location
   function handleLocationToggle() {
     if (!navigator.geolocation) {
       alert('Geolocation is not supported by this browser.');
       return;
     }
+
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -252,6 +316,12 @@ export default function SideList({ closeSidebar }) {
         break;
       case 'Turn On Location':
         handleLocationToggle();
+        break;
+      case 'About':
+        handleAboutClick();
+        break;
+      case 'General Anomalies':
+        handleGeneralAnomaliesClick();
         break;
       case 'Last Seen Location':
         if (lastSeenLocationName) {
@@ -313,7 +383,7 @@ export default function SideList({ closeSidebar }) {
                   <input
                     type="text"
                     name={input}
-                    placeholder={input}
+                    placeholder={input === 'Current Location' ? 'Enter location or lat,lng' : 'Enter destination or lat,lng'}
                     value={
                       input === 'Current Location' ? currLocation : destination
                     }

@@ -178,6 +178,23 @@ const FreeNavigationMap = () => {
     return '🛣️';
   };
 
+  // Create custom colored marker icons
+  const createColoredIcon = (status) => {
+    const color = status === 'bad' ? '#DC2626' : status === 'warning' ? '#EAB308' : '#16A34A';
+    const svgIcon = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" stroke="white" stroke-width="1">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+        <circle cx="12" cy="9" r="2.5" fill="white"/>
+      </svg>
+    `;
+    return new L.Icon({
+      iconUrl: `data:image/svg+xml;base64,${btoa(svgIcon)}`,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+    });
+  };
+
   // Map status to severity for consistent coloring
   const getStatusSeverity = (status) => {
     switch (status) {
@@ -244,7 +261,11 @@ const FreeNavigationMap = () => {
 
         {/* Anomaly Markers */}
         {anomalies.map((anomaly, i) => (
-          <Marker key={i} position={[anomaly.lat, anomaly.lng]}>
+          <Marker 
+            key={i} 
+            position={[anomaly.lat, anomaly.lng]}
+            icon={createColoredIcon(anomaly.status)}
+          >
             <Popup>
               <div className="min-w-[200px]">
                 <div
@@ -283,16 +304,15 @@ const FreeNavigationMap = () => {
 
       {/* Control Panel */}
       <div className="absolute right-4 top-4 z-[1000] flex max-w-[1/3] items-center gap-2 rounded-lg bg-white p-2 text-[12px] shadow-xl">
-        {!startPoint && !endPoint ? (
-          <p>Select the current location and the destination in the menu.</p>
-        ) : (
-          <button
+              {!endPoint &&
+                  <p>Select the current location and the destination in the menu.</p>
+              }
+          {startPoint&&endPoint && <button
             onClick={clearRoute}
             className="rounded bg-gray-500 px-1 py-0.5 text-white transition-colors hover:bg-gray-600"
           >
             Clear Route
-          </button>
-        )}
+          </button>}
        
       </div>
       
