@@ -49,11 +49,11 @@ export default function SideList({ closeSidebar }) {
     },
     {
       header: 'Analysis',
-      navItems: ['General Anomalies', 'Anomalies along your path'],
+      navItems: ['General Anomalies'],
     },
     {
       header: 'Tracking',
-      navItems: ['Past Journey', 'Last Seen Location'],
+      navItems: ['Past Journeys', 'Last Seen Location'],
     },
     {
       header: 'Settings',
@@ -230,6 +230,7 @@ export default function SideList({ closeSidebar }) {
     if (closeSidebar) {
       closeSidebar();
     }
+    navigate('/home');
   }
 
   function handleRouteSelect() {
@@ -261,6 +262,11 @@ export default function SideList({ closeSidebar }) {
     navigate('/home/all-anomalies');
     closeSidebar();
   }
+    function handlePastJourneysClick() {
+      navigate('/home/past-journeys');
+      
+      closeSidebar();
+    }
 
   // Request location permission and get current location
   function handleLocationToggle() {
@@ -323,6 +329,9 @@ export default function SideList({ closeSidebar }) {
       case 'General Anomalies':
         handleGeneralAnomaliesClick();
         break;
+          case 'Past Journeys':
+            handlePastJourneysClick();
+            break;
       case 'Last Seen Location':
         if (lastSeenLocationName) {
           toast.success(`Your last seen location is ${lastSeenLocationName}`);
@@ -425,12 +434,12 @@ export default function SideList({ closeSidebar }) {
                     <span>{navItem}</span>
                     {navItem === 'Dark/Light Mode' && (
                       <span className="text-xs">
-                        {isDarkMode ? '🌙' : '☀️'}
+                        {/* {isDarkMode ? '🌙' : '☀️'} */}
                       </span>
                     )}
                     {navItem === 'Turn On Location' && (
                       <span className="text-xs">
-                        {userLocation ? '📍' : '📍❌'}
+                        {/* {userLocation ? '📍' : '📍❌'} */}
                       </span>
                     )}
                   </p>
