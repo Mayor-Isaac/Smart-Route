@@ -10,6 +10,7 @@ import {
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import FreeDirectionsPanel from './FreeDirectionsPanel';
+import { anomalies } from '../../services/anomalies';
 
 // Fix for default markers
 delete L.Icon.Default.prototype._getIconUrl;
@@ -48,35 +49,35 @@ const FreeNavigationMap = () => {
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
       );
     }, []);
-  const [anomalies, setAnomalies] = useState([
-    {
-      id: 1,
-      type: 'pothole',
-      severity: 'high',
-      position: [37.7749, -122.4194],
-      description: 'Large pothole on right lane',
-      reportedBy: 'Community User',
-      timestamp: '2 hours ago',
-    },
-    {
-      id: 2,
-      type: 'crack',
-      severity: 'medium',
-      position: [37.783, -122.408],
-      description: 'Multiple cracks across lane',
-      reportedBy: 'City Inspector',
-      timestamp: '1 day ago',
-    },
-    {
-      id: 3,
-      type: 'pothole',
-      severity: 'critical',
-      position: [37.775, -122.425],
-      description: 'Deep pothole - avoid area',
-      reportedBy: 'Driver Report',
-      timestamp: '30 minutes ago',
-    },
-  ]);
+//   const [anomalies, setAnomalies] = useState([
+//     {
+//       id: 1,
+//       type: 'pothole',
+//       severity: 'high',
+//       position: [37.7749, -122.4194],
+//       description: 'Large pothole on right lane',
+//       reportedBy: 'Community User',
+//       timestamp: '2 hours ago',
+//     },
+//     {
+//       id: 2,
+//       type: 'crack',
+//       severity: 'medium',
+//       position: [37.783, -122.408],
+//       description: 'Multiple cracks across lane',
+//       reportedBy: 'City Inspector',
+//       timestamp: '1 day ago',
+//     },
+//     {
+//       id: 3,
+//       type: 'pothole',
+//       severity: 'critical',
+//       position: [37.775, -122.425],
+//       description: 'Deep pothole - avoid area',
+//       reportedBy: 'Driver Report',
+//       timestamp: '30 minutes ago',
+//     },
+//   ]);
 
   const getRoute = async (start, end) => {
     try {
@@ -151,36 +152,41 @@ const FreeNavigationMap = () => {
     return () => window.removeEventListener('smartroute:set-points', handler);
   }, []);
 
-  const getAnomalyStyles = (severity) => {
+  const getAnomalyStyles = (status) => {
     const baseStyles =
       'flex items-center justify-center text-white font-bold border-2 border-white rounded-full w-6 h-6 text-xs';
 
-    switch (severity) {
-      case 'critical':
+    switch (status) {
+      case 'bad':
         return `${baseStyles} bg-red-600`;
-      case 'high':
-        return `${baseStyles} bg-orange-500`;
-      case 'medium':
+      case 'warning':
         return `${baseStyles} bg-yellow-500`;
-      case 'low':
+      case 'good':
         return `${baseStyles} bg-green-500`;
       default:
         return `${baseStyles} bg-gray-500`;
     }
   };
 
-  const getAnomalyIcon = (type) => {
-    switch (type) {
-      case 'pothole':
-        return '🕳️';
-      case 'crack':
-        return '⚡';
-      case 'bump':
-        return '📈';
-      default:
-        return '⚠️';
+  const getAnomalyIcon = (anomaly) => {
+    const type = anomaly.toLowerCase();
+    if (type.includes('pothole')) return '🕳️';
+    if (type.includes('crack')) return '⚡';
+    if (type.includes('bump') || type.includes('speed')) return '⚠️';
+    if (type.includes('smooth')) return '✅';
+    if (type.includes('erosion')) return '🌊';
+    return '🛣️';
+  };
+
+  // Map status to severity for consistent coloring
+  const getStatusSeverity = (status) => {
+    switch (status) {
+      case 'bad': return 'critical';
+      case 'warning': return 'medium';
+      case 'good': return 'low';
+      default: return 'medium';
     }
-    };
+  };
 
   // Validate [lat, lng] arrays to avoid null/NaN usage
   const isValidLatLng = (arr) => {
@@ -190,16 +196,18 @@ const FreeNavigationMap = () => {
       Number.isFinite(Number(arr[0])) &&
       Number.isFinite(Number(arr[1]))
     );
-  };
+    };
+    
+    const clearRoute = () => {
+      setStartPoint(null);
+      setEndPoint(null);
+      setRoute(null);
+    };
 
   return (
     <div className="relative h-screen w-full">
       <MapContainer
-        center={
-          isValidLatLng(startPoint)
-            ? startPoint
-            : [37.7749, -122.4194]
-        }
+        center={isValidLatLng(startPoint) ? startPoint : [37.7749, -122.4194]}
         zoom={13}
         className="h-full w-full"
         ref={mapRef}
@@ -220,53 +228,43 @@ const FreeNavigationMap = () => {
         {isValidLatLng(endPoint) && <Marker position={endPoint}></Marker>}
 
         {/* Route Line */}
-        {route && route.geometry && Array.isArray(route.geometry.coordinates) && (
-          <Polyline
-            positions={route.geometry.coordinates.map((coord) => [
-              coord[1],
-              coord[0],
-            ])}
-            color="#3b82f6"
-            weight={6}
-            opacity={0.7}
-          />
-        )}
+        {route &&
+          route.geometry &&
+          Array.isArray(route.geometry.coordinates) && (
+            <Polyline
+              positions={route.geometry.coordinates.map((coord) => [
+                coord[1],
+                coord[0],
+              ])}
+              color="#3b82f6"
+              weight={6}
+              opacity={0.7}
+            />
+          )}
 
         {/* Anomaly Markers */}
-        {anomalies.map((anomaly) => (
-          <Marker
-            key={anomaly.id}
-            position={anomaly.position}
-            icon={L.divIcon({
-              html: `<div class="${getAnomalyStyles(
-                anomaly.severity
-              )}">${getAnomalyIcon(anomaly.type)}</div>`,
-              className: 'anomaly-marker',
-              iconSize: [24, 24],
-            })}
-          >
+        {anomalies.map((anomaly, i) => (
+          <Marker key={i} position={[anomaly.lat, anomaly.lng]}>
             <Popup>
               <div className="min-w-[200px]">
                 <div
                   className={`mb-2 flex items-center gap-2 rounded p-2 ${
-                    anomaly.severity === 'critical'
+                    anomaly.status === 'bad'
                       ? 'border-l-4 border-red-500 bg-red-100'
-                      : anomaly.severity === 'high'
-                      ? 'border-l-4 border-orange-500 bg-orange-100'
-                      : anomaly.severity === 'medium'
+                      : anomaly.status === 'warning'
                       ? 'border-l-4 border-yellow-500 bg-yellow-100'
                       : 'border-l-4 border-green-500 bg-green-100'
                   }`}
                 >
                   <span className="text-lg">
-                    {getAnomalyIcon(anomaly.type)}
+                    {getAnomalyIcon(anomaly.anomaly)}
                   </span>
                   <div>
                     <div className="font-semibold capitalize">
-                      {anomaly.type}
+                      {anomaly.anomaly}
                     </div>
                     <div className="text-sm capitalize text-gray-600">
-                      {anomaly.severity} severity
+                      {anomaly.status}
                     </div>
                   </div>
                 </div>
@@ -274,8 +272,8 @@ const FreeNavigationMap = () => {
                   {anomaly.description}
                 </p>
                 <div className="border-t pt-2 text-xs text-gray-500">
-                  <div>Reported by: {anomaly.reportedBy}</div>
-                  <div>{anomaly.timestamp}</div>
+                  <div>Status: {anomaly.status}</div>
+                  <div>{new Date(anomaly.timestamp).toLocaleDateString()}</div>
                 </div>
               </div>
             </Popup>
@@ -284,69 +282,20 @@ const FreeNavigationMap = () => {
       </MapContainer>
 
       {/* Control Panel */}
-      <div className="absolute right-4 top-4 z-[1000] max-w-[1/3] rounded-lg bg-white p-2 text-[12px] shadow-xl">
-              {!startPoint && !endPoint ? <p>Select the current location and the destination in the menu.</p>: <p>Enjoy your trip</p>}
+      <div className="absolute right-4 top-4 z-[1000] flex max-w-[1/3] items-center gap-2 rounded-lg bg-white p-2 text-[12px] shadow-xl">
+        {!startPoint && !endPoint ? (
+          <p>Select the current location and the destination in the menu.</p>
+        ) : (
+          <button
+            onClick={clearRoute}
+            className="rounded bg-gray-500 px-1 py-0.5 text-white transition-colors hover:bg-gray-600"
+          >
+            Clear Route
+          </button>
+        )}
+       
       </div>
-      {/* <div className="absolute left-4 top-4 z-[1000] max-w-xs rounded-lg bg-white p-4 shadow-xl">
-        <div className="mb-3 flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500">
-            <span className="font-bold text-white">🛣️</span>
-          </div>
-          <div>
-            <h3 className="font-bold text-gray-800">RoadSafe Navigator</h3>
-            <p className="text-xs text-gray-600">Free & Open Source</p>
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Start Point:</span>
-            <span
-              className={
-                startPoint ? 'font-medium text-green-600' : 'text-gray-400'
-              }
-            >
-              {startPoint ? 'Set ✓' : 'Not set'}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">End Point:</span>
-            <span
-              className={
-                endPoint ? 'font-medium text-green-600' : 'text-gray-400'
-              }
-            >
-              {endPoint ? 'Set ✓' : 'Not set'}
-            </span>
-          </div>
-
-          {route && (
-            <div className="rounded border border-green-200 bg-green-50 p-2">
-              <div className="text-sm font-medium text-green-800">
-                Route calculated!
-              </div>
-              <div className="text-xs text-green-600">
-                {(route.distance / 1000).toFixed(1)} km •{' '}
-                {Math.round(route.duration / 60)} min
-              </div>
-            </div>
-          )}
-
-          <div className="rounded bg-gray-50 p-2 text-xs text-gray-500">
-            💡 Click map to set points: Start → End
-          </div>
-
-          {(startPoint || endPoint) && (
-            <button
-              onClick={clearRoute}
-              className="w-full rounded bg-gray-500 px-3 py-2 text-sm text-white transition-colors hover:bg-gray-600"
-            >
-              Clear Route
-            </button>
-          )}
-        </div>
-      </div> */}
+      
 
       {/* Directions Panel */}
       <FreeDirectionsPanel route={route} anomalies={anomalies} />
