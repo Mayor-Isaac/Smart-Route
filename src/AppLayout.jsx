@@ -15,11 +15,11 @@ export default function AppLayout() {
   };
 
   return (
-    <div className="h-screen border  border-green-500 overflow-y-scroll bg-black">
+    <div className="h-screen flex flex-col">
       <Header toggleSidebar={toggleSidebar} />
-      <div className="flex-1 border border-yellow-500 flex items-stretch">
+      <div className="flex flex-1 min-h-0">
         <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
-        <main className="flex-1 p-4 overflow-y-auto h-full border  border-blue-500">
+        <main className="flex-1 h-full min-h-0 overflow-y-auto p-4">
           <Outlet />
         </main>
       </div>

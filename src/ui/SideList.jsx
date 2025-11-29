@@ -34,6 +34,7 @@ export default function SideList({ closeSidebar }) {
     },
     {
       header: 'Alternative Routes',
+      disabled: true,
       routes: ['Route 1', 'Route 2', 'Route 3'],
     },
     {
@@ -216,7 +217,7 @@ export default function SideList({ closeSidebar }) {
     <div className="scrollbar-hide h-[93%] overflow-y-auto p-4">
       {items.map((item, index) => {
         return (
-          <div className="relative mb-4 border-b border-green-300" key={index}>
+          <div className={`relative mb-4 border-b border-green-300`} key={index}>
             {item.header && (
               <h3
                 className={`font-bold text-green-600 ${
