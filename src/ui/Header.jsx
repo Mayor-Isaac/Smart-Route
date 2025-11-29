@@ -10,7 +10,7 @@ export default function Header({ toggleSidebar }) {
         : 'Evening';
 
   return (
-    <div className="flex items-center justify-between border border-green-500 px-2  py-4 ">
+    <div className="flex items-center justify-between px-2  py-4 ">
       <h1 className=" text-base font-bold uppercase">Smart Route</h1>
       <div className="flex items-center gap-20">
         <p>

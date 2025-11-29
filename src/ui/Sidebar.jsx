@@ -7,7 +7,7 @@ export default function Sidebar({ isOpen, closeSidebar }) {
       {/* Overlay for mobile */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-[40000] md:hidden"
           onClick={closeSidebar}
         />
       )}

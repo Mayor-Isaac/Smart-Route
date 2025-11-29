@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Close from './Close';
 
 export default function SideList({ closeSidebar }) {
@@ -7,6 +7,25 @@ export default function SideList({ closeSidebar }) {
   const [destination, setDestination] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const [isActivate, setIsActivate] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isLocationEnabled, setIsLocationEnabled] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
+
+  // Check for saved theme preference or default to light mode
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
+
+  // Check if geolocation is available
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      setIsLocationEnabled(true);
+    }
+  }, []);
 
   const items = [
     {
@@ -64,6 +83,74 @@ export default function SideList({ closeSidebar }) {
     }
   }
 
+  // Toggle dark/light mode
+  function toggleDarkMode() {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
+  // Request location permission and get current location
+  function handleLocationToggle() {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by this browser.');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserLocation({ lat: latitude, lng: longitude });
+        setCurrentLocation(`${latitude.toFixed(6)}, ${longitude.toFixed(6)}`);
+        setIsComplete(destination !== '');
+        alert('Location access granted! Your current location has been set.');
+      },
+      (error) => {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            alert('Location access denied. Please enable location in your browser settings.');
+            break;
+          case error.POSITION_UNAVAILABLE:
+            alert('Location information is unavailable.');
+            break;
+          case error.TIMEOUT:
+            alert('Location request timed out.');
+            break;
+          default:
+            alert('An unknown error occurred while retrieving location.');
+            break;
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+    );
+  }
+
+  // Handle click events for specific nav items
+  function handleNavItemClick(navItem) {
+    switch (navItem) {
+      case 'Dark/Light Mode':
+        toggleDarkMode();
+        break;
+      case 'Turn On Location':
+        handleLocationToggle();
+        break;
+      default:
+        // Handle other nav items
+        console.log(`Clicked on: ${navItem}`);
+    }
+  }
+
   return (
     <div className="scrollbar-hide h-[93%] overflow-y-auto p-4">
       {items.map((item, index) => {
@@ -117,8 +204,21 @@ export default function SideList({ closeSidebar }) {
             {item.navItems?.map((navItem, key) => {
               return (
                 <div key={key} className="pl-8">
-                  <p className="cursor-pointer text-green-500 transition hover:font-bold hover:text-green-600 hover:underline">
-                    {navItem}
+                  <p 
+                    className="cursor-pointer text-green-500 transition hover:font-bold hover:text-green-600 hover:underline flex items-center justify-between"
+                    onClick={() => handleNavItemClick(navItem)}
+                  >
+                    <span>{navItem}</span>
+                    {navItem === 'Dark/Light Mode' && (
+                      <span className="text-xs">
+                        {isDarkMode ? '🌙' : '☀️'}
+                      </span>
+                    )}
+                    {navItem === 'Turn On Location' && (
+                      <span className="text-xs">
+                        {userLocation ? '📍' : '📍❌'}
+                      </span>
+                    )}
                   </p>
                 </div>
               );

@@ -4,6 +4,7 @@ import Sidebar from '../../ui/Sidebar';
 import { HiMenu } from 'react-icons/hi';
 import GoogleMaps from '../../ui/GoogleMaps';
 import MapViewer from '../../ui/MapViewer';
+import FreeNavigationMap from '../../Components/Leaflet/FreeNavigationMap';
 
 export default function Map() {
   const [showMenu, setShowMenu] = useState(true);
@@ -12,8 +13,9 @@ export default function Map() {
   };
 
   return (
-      <div className="">
-        <MapViewer />
-      </div>
+    <div className="">
+      {/* <MapViewer /> */}
+      <FreeNavigationMap />
+    </div>
   );
 }

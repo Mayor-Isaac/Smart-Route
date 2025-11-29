@@ -182,7 +182,7 @@ export default function Home() {
             <div className="btn-container mt-8 flex justify-center gap-6 md:justify-start">
               <Link
                 to="/home"
-                className="inline-block rounded-md bg-[#39ff14] px-8 py-3 text-center text-xl text-white"
+                className="inline-block rounded-md bg-[#39ff14] px-8 py-3 text-center text-xl text-white animate-pulse"
               >
                 Get Started
               </Link>
