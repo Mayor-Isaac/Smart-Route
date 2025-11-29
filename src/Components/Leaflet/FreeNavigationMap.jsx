@@ -1,5 +1,5 @@
 // components/FreeNavigationMap.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -26,6 +26,7 @@ const FreeNavigationMap = () => {
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
   const [route, setRoute] = useState(null);
+  const mapRef = useRef(null);
     // On mount: attempt to set startPoint to the user's current location and center the map
     useEffect(() => {
       if (!('geolocation' in navigator)) return;
@@ -127,11 +128,22 @@ const FreeNavigationMap = () => {
       const originArr = toLatLngArray(origin);
       const destArr = toLatLngArray(destination);
 
-      if (originArr) setStartPoint(originArr);
+      if (originArr) {
+        setStartPoint(originArr);
+        // Move map to show the start point
+        if (mapRef.current) {
+          mapRef.current.setView(originArr, 13);
+        }
+      }
       if (destArr) setEndPoint(destArr);
 
       if (originArr && destArr) {
         getRoute(originArr, destArr);
+        // If both points exist, fit bounds to show both
+        if (mapRef.current) {
+          const bounds = L.latLngBounds([originArr, destArr]);
+          mapRef.current.fitBounds(bounds, { padding: [50, 50] });
+        }
       }
     };
 
@@ -190,6 +202,10 @@ const FreeNavigationMap = () => {
         }
         zoom={13}
         className="h-full w-full"
+        ref={mapRef}
+        whenCreated={(mapInstance) => {
+          mapRef.current = mapInstance;
+        }}
         // Map clicks disabled; points come from Sidebar via event
       >
         <TileLayer
