@@ -284,7 +284,7 @@ const FreeNavigationMap = () => {
       </MapContainer>
 
       {/* Control Panel */}
-      <div className="absolute right-4 top-4 z-[1000] rounded-lg bg-white p-2 text-[12px] shadow-xl">
+      <div className="absolute right-4 top-4 z-[1000] max-w-[1/3] rounded-lg bg-white p-2 text-[12px] shadow-xl">
               {!startPoint && !endPoint ? <p>Select the current location and the destination in the menu.</p>: <p>Enjoy your trip</p>}
       </div>
       {/* <div className="absolute left-4 top-4 z-[1000] max-w-xs rounded-lg bg-white p-4 shadow-xl">
