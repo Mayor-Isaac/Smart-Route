@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaCrown } from 'react-icons/fa';
+import toast, { Toaster } from 'react-hot-toast';
 import Close from './Close';
 
 export default function SideList({ closeSidebar }) {
@@ -11,6 +12,7 @@ export default function SideList({ closeSidebar }) {
   const [isActivate, setIsActivate] = useState(false);
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
+  const [lastSeenLocationName, setLastSeenLocationName] = useState(null);
 
   // Check for saved theme preference or default to light mode
   useEffect(() => {
@@ -60,6 +62,33 @@ export default function SideList({ closeSidebar }) {
     },
   ];
 
+  // Reverse geocoding to get location name from coordinates
+  const getLocationName = async (lat, lng) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
+      );
+      const data = await response.json();
+      
+      if (data && data.display_name) {
+        // Extract meaningful parts of the address
+        const address = data.address;
+        const parts = [];
+        
+        if (address.road || address.street) parts.push(address.road || address.street);
+        if (address.suburb || address.neighbourhood) parts.push(address.suburb || address.neighbourhood);
+        if (address.city || address.town) parts.push(address.city || address.town);
+        if (address.state) parts.push(address.state);
+        
+        return parts.slice(0, 2).join(', ') || data.display_name.split(',')[0];
+      }
+      return 'Unknown location';
+    } catch (error) {
+      console.error('Error getting location name:', error);
+      return 'Unknown location';
+    }
+  };
+
   function handleLocation(e) {
     const { name, value } = e.target;
 
@@ -85,6 +114,11 @@ export default function SideList({ closeSidebar }) {
         setUserLocation({ lat: latitude, lng: longitude });
         setCurrentLocation(formatted);
         setIsComplete(formatted !== '' && destination !== '');
+
+        // Get and store the location name for "Last Seen Location"
+        getLocationName(latitude, longitude).then(locationName => {
+          setLastSeenLocationName(locationName);
+        });
 
         // Immediately dispatch origin to map so it can center/prepare routing
         window.dispatchEvent(
@@ -178,6 +212,12 @@ export default function SideList({ closeSidebar }) {
         setUserLocation({ lat: latitude, lng: longitude });
         setCurrentLocation(`${latitude.toFixed(6)}, ${longitude.toFixed(6)}`);
         setIsComplete(destination !== '');
+        
+        // Get and store the location name for "Last Seen Location"
+        getLocationName(latitude, longitude).then(locationName => {
+          setLastSeenLocationName(locationName);
+        });
+        
         alert('Location access granted! Your current location has been set.');
       },
       (error) => {
@@ -212,6 +252,19 @@ export default function SideList({ closeSidebar }) {
         break;
       case 'Turn On Location':
         handleLocationToggle();
+        break;
+      case 'Last Seen Location':
+        if (lastSeenLocationName) {
+          toast.success(`Your last seen location is ${lastSeenLocationName}`);
+        } else if (userLocation) {
+          // If we have coordinates but no name yet, get the name
+          getLocationName(userLocation.lat, userLocation.lng).then(locationName => {
+            setLastSeenLocationName(locationName);
+            toast.success(`Your last seen location is ${locationName}`);
+          });
+        } else {
+          toast.error('No location data available. Please enable location access first.');
+        }
         break;
       default:
         // Handle other nav items
@@ -335,6 +388,34 @@ export default function SideList({ closeSidebar }) {
           </div>
         );
       })}
+      
+      {/* Toast container with high z-index */}
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            zIndex: 99999,
+          },
+          success: {
+            style: {
+              background: '#10B981',
+              color: 'white',
+              zIndex: 99999,
+            },
+          },
+          error: {
+            style: {
+              background: '#EF4444',
+              color: 'white',
+              zIndex: 99999,
+            },
+          },
+        }}
+        containerStyle={{
+          zIndex: 99999,
+        }}
+      />
     </div>
   );
 }
