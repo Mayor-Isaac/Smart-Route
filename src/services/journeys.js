@@ -2,16 +2,12 @@ export const journeys = [
   {
     id: 1,
     origin: {
-      name: "FUTA North Gate",
       lat: 7.312,
-      lng: 5.1355,
-      address: "North Gate, Federal University of Technology Akure"
+      lng: 5.1355
     },
     destination: {
-      name: "Akure Mall",
       lat: 7.2905,
-      lng: 5.1356,
-      address: "Akure Mall, Oba Ile Road, Akure"
+      lng: 5.1356
     },
     distance: 3.8, // km
     duration: 12, // minutes
@@ -32,24 +28,18 @@ export const journeys = [
     ],
     weatherCondition: "sunny",
     trafficLevel: "light",
-    cost: 85.50, // Naira
     carbonEmission: 0.12, // kg CO2
     rating: 4.5,
     notes: "Smooth journey with minimal traffic. One pothole encountered but easily navigable."
   },
   {
-    id: 2,
     origin: {
-      name: "University of Ibadan Main Gate",
-      lat: 7.3775,
-      lng: 3.9470,
-      address: "Main Gate, University of Ibadan, Ibadan"
+      lat: 7.3122,
+      lng: 5.1358
     },
     destination: {
-      name: "Bodija Market",
-      lat: 7.4040,
-      lng: 3.9094,
-      address: "Bodija Market, Ibadan, Oyo State"
+      lat: 7.2944,
+      lng: 5.1894
     },
     distance: 8.2, // km
     duration: 28, // minutes
@@ -76,7 +66,6 @@ export const journeys = [
     ],
     weatherCondition: "partly_cloudy",
     trafficLevel: "moderate",
-    cost: 180.00, // Naira
     carbonEmission: 0.08, // kg CO2
     rating: 3.5,
     notes: "Heavy traffic around Sango area. Multiple road anomalies but manageable on motorcycle."
@@ -84,91 +73,77 @@ export const journeys = [
   {
     id: 3,
     origin: {
-      name: "Lagos International Airport",
-      lat: 6.5773,
-      lng: 3.3210,
-      address: "Murtala Muhammed International Airport, Lagos"
+      lat: 7.2773,
+      lng: 5.2210
     },
     destination: {
-      name: "Victoria Island",
-      lat: 6.4281,
-      lng: 3.4219,
-      address: "Victoria Island, Lagos State"
+      lat: 7.2628,
+      lng: 5.2094
     },
-    distance: 28.5, // km
-    duration: 65, // minutes
+    distance: 12.5, // km
+    duration: 35, // minutes
     startTime: "2025-11-23T16:45:00Z",
-    endTime: "2025-11-23T17:50:00Z",
+    endTime: "2025-11-23T17:20:00Z",
     status: "completed",
     routeType: "scenic",
     vehicleType: "car",
-    averageSpeed: 26, // km/h
-    maxSpeed: 80, // km/h
+    averageSpeed: 21, // km/h
+    maxSpeed: 55, // km/h
     anomaliesEncountered: [
       {
         type: "construction",
         severity: "high",
-        location: "Third Mainland Bridge",
-        timestamp: "2025-11-23T17:15:00Z"
+        location: "Ilesha-Akure Expressway",
+        timestamp: "2025-11-23T17:00:00Z"
       },
       {
         type: "flooding",
         severity: "critical",
-        location: "Oworonshoki",
-        timestamp: "2025-11-23T17:25:00Z"
+        location: "Ondo Road",
+        timestamp: "2025-11-23T17:10:00Z"
       }
     ],
     weatherCondition: "rainy",
     trafficLevel: "heavy",
-    cost: 450.75, // Naira
-    carbonEmission: 0.95, // kg CO2
-    rating: 2.0,
-    notes: "Terrible journey! Heavy rain caused flooding. Construction delays on bridge. Took forever."
+    carbonEmission: 0.35, // kg CO2
+    rating: 2.5,
+    notes: "Rainy season challenges. Construction work and flooding caused delays."
   },
   {
     id: 4,
     origin: {
-      name: "Abuja City Gate",
-      lat: 9.0579,
-      lng: 7.4951,
-      address: "City Gate, Abuja FCT"
+      lat: 7.3089,
+      lng: 5.1401
     },
     destination: {
-      name: "Nnamdi Azikiwe International Airport",
-      lat: 9.0067,
-      lng: 7.2634,
-      address: "Nnamdi Azikiwe International Airport, Abuja"
+      lat: 7.2985,
+      lng: 5.1298
     },
-    distance: 45.2, // km
-    duration: 42, // minutes
+    distance: 5.2, // km
+    duration: 15, // minutes
     startTime: "2025-11-22T06:00:00Z",
-    endTime: "2025-11-22T06:42:00Z",
+    endTime: "2025-11-22T06:15:00Z",
     status: "completed",
     routeType: "fastest",
     vehicleType: "taxi",
-    averageSpeed: 65, // km/h
-    maxSpeed: 110, // km/h
+    averageSpeed: 35, // km/h
+    maxSpeed: 50, // km/h
     anomaliesEncountered: [],
     weatherCondition: "clear",
     trafficLevel: "light",
-    cost: 2500.00, // Naira
-    carbonEmission: 1.25, // kg CO2
+    carbonEmission: 0.25, // kg CO2
     rating: 5.0,
-    notes: "Perfect morning drive! No traffic, excellent road conditions. Airport express way is a dream."
+    notes: "Perfect early morning drive! No traffic, excellent road conditions within Akure."
   },
   {
     id: 5,
     origin: {
-      name: "FUTA South Gate",
       lat: 7.3001,
-      lng: 5.1425,
-      address: "South Gate, Federal University of Technology Akure"
+      lng: 5.1425
     },
     destination: {
-      name: "Ondo State Specialist Hospital",
       lat: 7.2644,
-      lng: 5.2106,
-      address: "State Specialist Hospital, Akure, Ondo State"
+      lng: 5.2106
     },
     distance: 12.3, // km
     duration: 35, // minutes
@@ -195,7 +170,6 @@ export const journeys = [
     ],
     weatherCondition: "overcast",
     trafficLevel: "standstill",
-    cost: 200.00, // Naira
     carbonEmission: 0.32, // kg CO2
     rating: 1.0,
     notes: "Emergency trip to hospital. Major accident caused massive delays. Police roadblock added more time."
@@ -203,16 +177,12 @@ export const journeys = [
   {
     id: 6,
     origin: {
-      name: "Computer Science Building, FUTA",
       lat: 7.3089,
-      lng: 5.1401,
-      address: "School of Computing, FUTA, Akure"
+      lng: 5.1401
     },
     destination: {
-      name: "FUTA Teaching Hospital",
       lat: 7.2985,
-      lng: 5.1298,
-      address: "Federal University of Technology Teaching Hospital, Akure"
+      lng: 5.1298
     },
     distance: 2.1, // km
     duration: 8, // minutes
@@ -233,98 +203,87 @@ export const journeys = [
     ],
     weatherCondition: "sunny",
     trafficLevel: "none",
-    cost: 0.00, // Naira
     carbonEmission: 0.00, // kg CO2
     rating: 4.8,
-    notes: "Quick walk to hospital for medical check-up. Great weather, minimal obstacles. Eco-friendly! 🌱"
+    notes: "Quick walk within FUTA campus. Great weather, minimal obstacles. Eco-friendly! 🌱"
   },
   {
     id: 7,
     origin: {
-      name: "Kano Central Market",
-      lat: 12.0022,
-      lng: 8.5919,
-      address: "Kurmi Market, Kano State"
+      lat: 7.2822,
+      lng: 5.1919
     },
     destination: {
-      name: "Mallam Aminu Kano International Airport",
-      lat: 12.0476,
-      lng: 8.5246,
-      address: "Mallam Aminu Kano International Airport, Kano"
+      lat: 7.3145,
+      lng: 5.1375
     },
-    distance: 15.7, // km
-    duration: 55, // minutes
+    distance: 8.7, // km
+    duration: 25, // minutes
     startTime: "2025-11-19T09:30:00Z",
-    endTime: "2025-11-19T10:25:00Z",
+    endTime: "2025-11-19T09:55:00Z",
     status: "completed",
     routeType: "balanced",
     vehicleType: "bus",
-    averageSpeed: 17, // km/h
-    maxSpeed: 45, // km/h
+    averageSpeed: 21, // km/h
+    maxSpeed: 40, // km/h
     anomaliesEncountered: [
       {
-        type: "dust storm",
+        type: "dust",
         severity: "medium",
-        location: "Zaria Road",
-        timestamp: "2025-11-19T09:45:00Z"
+        location: "Oba Ile Road",
+        timestamp: "2025-11-19T09:40:00Z"
       },
       {
-        type: "livestock crossing",
+        type: "speed bump",
         severity: "low",
-        location: "Airport Road",
-        timestamp: "2025-11-19T10:10:00Z"
+        location: "Akure Main Market",
+        timestamp: "2025-11-19T09:50:00Z"
       }
     ],
     weatherCondition: "dusty",
     trafficLevel: "moderate",
-    cost: 350.00, // Naira
-    carbonEmission: 0.45, // kg CO2
+    carbonEmission: 0.18, // kg CO2
     rating: 3.8,
-    notes: "Typical Kano journey. Harmattan dust reduced visibility. Cattle delayed us briefly but driver handled well."
+    notes: "Typical Akure market route. Harmattan dust but manageable. Bus service reliable."
   },
   {
     id: 8,
     origin: {
-      name: "Port Harcourt Refinery",
-      lat: 4.8156,
-      lng: 7.0498,
-      address: "Port Harcourt Refinery, Rivers State"
+      lat: 7.2456,
+      lng: 5.1998
     },
     destination: {
-      name: "University of Port Harcourt",
-      lat: 4.8975,
-      lng: 6.9098,
-      address: "University of Port Harcourt, Choba, Rivers State"
+      lat: 7.3089,
+      lng: 5.1401
     },
-    distance: 22.4, // km
-    duration: 48, // minutes
+    distance: 9.4, // km
+    duration: 28, // minutes
     startTime: "2025-11-18T07:15:00Z",
-    endTime: "2025-11-18T08:03:00Z",
+    endTime: "2025-11-18T07:43:00Z",
     status: "completed",
     routeType: "fastest",
     vehicleType: "car",
-    averageSpeed: 28, // km/h
-    maxSpeed: 70, // km/h
+    averageSpeed: 20, // km/h
+    maxSpeed: 60, // km/h
     anomaliesEncountered: [
       {
-        type: "oil spill",
-        severity: "medium",
-        location: "Refinery Junction",
-        timestamp: "2025-11-18T07:22:00Z"
+        type: "minor crack",
+        severity: "low",
+        location: "Oba Adesida Road",
+        timestamp: "2025-11-18T07:25:00Z"
       },
       {
         type: "smooth road",
         severity: "good",
-        location: "East-West Road",
+        location: "FUTA Road",
         timestamp: "2025-11-18T07:35:00Z"
       }
     ],
-    weatherCondition: "humid",
+    weatherCondition: "clear",
     trafficLevel: "light",
-    cost: 380.00, // Naira
-    carbonEmission: 0.78, // kg CO2
+    carbonEmission: 0.32, // kg CO2
     rating: 4.2,
-    notes: "Early morning commute. Minor oil spill near refinery but road cleared quickly. East-West Road in excellent condition."
+    notes: "Morning commute to FUTA. Good road conditions, minimal traffic. FUTA Road well maintained."
   }
 ];
 
@@ -345,7 +304,6 @@ export const getJourneyStats = () => {
     totalDistance: totalDistance.toFixed(1),
     totalDuration: Math.round(totalDuration),
     averageSpeed: (totalDistance / (totalDuration / 60)).toFixed(1),
-    totalCost: totalCost.toFixed(2),
     totalEmissions: totalEmissions.toFixed(2),
     averageRating: averageRating.toFixed(1)
   };
@@ -358,7 +316,6 @@ export const getJourneysByVehicleType = () => {
       vehicleStats[journey.vehicleType] = {
         count: 0,
         totalDistance: 0,
-        totalCost: 0,
         totalEmissions: 0
       };
     }
