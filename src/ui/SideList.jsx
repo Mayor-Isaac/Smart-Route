@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaCrown } from 'react-icons/fa';
 import Close from './Close';
 
 export default function SideList({ closeSidebar }) {
@@ -220,18 +221,32 @@ export default function SideList({ closeSidebar }) {
           <div className={`relative mb-4 border-b border-green-300`} key={index}>
             {item.header && (
               <h3
-                className={`font-bold text-green-600 ${
-                  item.routes &&
-                  isActivate &&
-                  'cursor-pointer transition hover:my-2 hover:scale-x-105'
-                } ${item.routes && !isActivate && 'text-green-200'}`}
+                className={(() => {
+                  if (item.header === 'Alternative Routes') {
+                    return 'font-bold text-green-300 opacity-60 select-none cursor-not-allowed';
+                  }
+                  return `font-bold text-green-600 ${
+                    item.routes &&
+                    isActivate &&
+                    'cursor-pointer transition hover:my-2 hover:scale-x-105'
+                  } ${item.routes && !isActivate && 'text-green-200'}`;
+                })()}
                 onClick={
-                  item.header === 'Alternative Routes' && isActivate
+                  item.header === 'Alternative Routes'
+                    ? undefined
+                    : item.routes && isActivate
                     ? () => setShowAlt(!showAlt)
                     : undefined
                 }
               >
-                {item.header}
+                {item.header === 'Alternative Routes' ? (
+                  <span className="flex items-center gap-2">
+                    <FaCrown className="text-yellow-500" />
+                    <span>Alternative Routes</span>
+                  </span>
+                ) : (
+                  item.header
+                )}
               </h3>
             )}
             {item.inputs?.map((input, key) => {
@@ -294,7 +309,7 @@ export default function SideList({ closeSidebar }) {
                 </div>
               );
             })}
-            {showAlt && item.routes && (
+            {showAlt && item.routes && item.header !== 'Alternative Routes' && (
               <div className="absolute -top-2 right-0 z-[999999999] rounded border border-green-500 bg-gray-100 p-4">
                 <Close
                   closeBar={() => {

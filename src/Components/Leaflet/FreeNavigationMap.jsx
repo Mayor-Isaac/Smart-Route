@@ -109,8 +109,18 @@ const FreeNavigationMap = () => {
       // origin/destination can be { lat, lng } arrays or objects
       const toLatLngArray = (val) => {
         if (!val) return null;
-        if (Array.isArray(val) && val.length === 2) return [val[0], val[1]];
-        if (typeof val === 'object' && 'lat' in val && 'lng' in val) return [val.lat, val.lng];
+        if (Array.isArray(val) && val.length === 2) {
+          const lat = Number(val[0]);
+          const lng = Number(val[1]);
+          if (Number.isFinite(lat) && Number.isFinite(lng)) return [lat, lng];
+          return null;
+        }
+        if (val && typeof val === 'object' && 'lat' in val && 'lng' in val) {
+          const lat = Number(val.lat);
+          const lng = Number(val.lng);
+          if (Number.isFinite(lat) && Number.isFinite(lng)) return [lat, lng];
+          return null;
+        }
         return null;
       };
 
@@ -158,18 +168,26 @@ const FreeNavigationMap = () => {
       default:
         return '⚠️';
     }
-  };
+    };
 
-  const clearRoute = () => {
-    setStartPoint(null);
-    setEndPoint(null);
-    setRoute(null);
+  // Validate [lat, lng] arrays to avoid null/NaN usage
+  const isValidLatLng = (arr) => {
+    return (
+      Array.isArray(arr) &&
+      arr.length === 2 &&
+      Number.isFinite(Number(arr[0])) &&
+      Number.isFinite(Number(arr[1]))
+    );
   };
 
   return (
     <div className="relative h-screen w-full">
       <MapContainer
-        center={startPoint || [7.300339, 5.138027]}
+        center={
+          isValidLatLng(startPoint)
+            ? startPoint
+            : [37.7749, -122.4194]
+        }
         zoom={13}
         className="h-full w-full"
         // Map clicks disabled; points come from Sidebar via event
@@ -180,13 +198,13 @@ const FreeNavigationMap = () => {
         />
 
         {/* Start Marker */}
-        {startPoint && <Marker position={startPoint}></Marker>}
+        {isValidLatLng(startPoint) && <Marker position={startPoint}></Marker>}
 
         {/* End Marker */}
-        {endPoint && <Marker position={endPoint}></Marker>}
+        {isValidLatLng(endPoint) && <Marker position={endPoint}></Marker>}
 
         {/* Route Line */}
-        {route && (
+        {route && route.geometry && Array.isArray(route.geometry.coordinates) && (
           <Polyline
             positions={route.geometry.coordinates.map((coord) => [
               coord[1],
