@@ -159,7 +159,7 @@ const JourneyDetails = ({ journey, closeModal, getLocationName, formatTimeStamp 
             <div className="flex-1">
               <div className="">
                 Start Location:
-                {/* <strong>{getLocationName(journey.origin.lat, journey.origin.lng) || ""}</strong> */}
+                <strong>{getLocationName(journey.origin.lat, journey.origin.lng) || ""}</strong>
               </div>
 
               <div className="">
@@ -171,12 +171,12 @@ const JourneyDetails = ({ journey, closeModal, getLocationName, formatTimeStamp 
             <div className="flex-1">
               <div className="">
                 Destination:{' '}
-                {/* <strong>
+                <strong>
                   {getLocationName(
                     journey.destination.lat,
                     journey.destination.lng
                   ) || ''}
-                </strong> */}
+                </strong>
               </div>
 
               <div className="">
