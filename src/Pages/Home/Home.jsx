@@ -553,7 +553,7 @@ export default function Home() {
           </div>
           <div className="mt-6 flex flex-col items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <button className="text-nowrap rounded border-2 border-[#004225] px-6 py-2.5 text-[#004225] transition hover:bg-[#004225] hover:text-white">
+              <button className="text-nowrap rounded border-2 border-[#004225] px-6 py-2.5 text-[#004225] transition hover:bg-[#004225] hover:text-white" onClick={() => navigate("/purchase-form")}>
                 Get device
               </button>
 

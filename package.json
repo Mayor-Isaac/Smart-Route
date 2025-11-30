@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@react-google-maps/api": "^2.20.7",
     "@reduxjs/toolkit": "^1.9.5",
     "dayjs": "^1.11.13",
