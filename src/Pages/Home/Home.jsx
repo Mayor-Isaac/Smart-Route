@@ -23,11 +23,15 @@ import {
 import { GoArrowUpRight } from "react-icons/go";
 import { Link } from 'react-router-dom';
 import { homeData } from './data';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [expandedTestimonials, setExpandedTestimonials] = useState({})
   const [showScrollTop, setShowScrollTop] = useState(false)
+
+  const navigate = useNavigate()
+
 
   const toggleTestimonial = (index) => {
     setExpandedTestimonials(prev => ({
@@ -547,14 +551,21 @@ export default function Home() {
               />
             </div>
           </div>
-          <div className="mt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
-            <p className="flex items-center gap-2 text-sm italic text-[#004225]">
+          <div className="mt-6 flex flex-col items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <button className="text-nowrap rounded border-2 border-[#004225] px-6 py-2.5 text-[#004225] transition hover:bg-[#004225] hover:text-white">
+                Get device
+              </button>
+
+              <button className="text-nowrap rounded px-6 py-3  transition bg-[#004225] text-white animate-pulse" onClick={() => { navigate(`/payment`) }}>
+                Make Payment
+              </button>
+            </div>
+
+            <p className="flex gap-2 text-sm italic text-[#004225]">
               <FaInfoCircle className="text-[#004225]" /> Your information is
               safe with us, secured by advanced encryption.
             </p>
-            <button className="text-nowrap rounded border-2 border-[#004225] px-6 py-3 text-[#004225] transition hover:bg-[#004225] hover:text-white">
-              Get device
-            </button>
           </div>
         </div>
       </section>
