@@ -17,7 +17,8 @@ import {
   FaLinkedin,
   FaEnvelope,
   FaTimes,
-  FaArrowUp
+  FaArrowUp,
+  FaPhone
 } from 'react-icons/fa'
 import { GoArrowUpRight } from "react-icons/go";
 import { Link } from 'react-router-dom';
@@ -94,7 +95,7 @@ export default function Home() {
             <ul className="flex list-none items-center gap-8">
               <li>
                 <a
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  className="cursor-pointer py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
                   onClick={scrollToTop}
                 >
                   Home
@@ -102,7 +103,7 @@ export default function Home() {
               </li>
               <li>
                 <a
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  className="cursor-pointer py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
                   onClick={(e) => handleSmoothScroll(e, '#feature')}
                 >
                   About
@@ -110,7 +111,7 @@ export default function Home() {
               </li>
               <li>
                 <a
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  className="cursor-pointer py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
                   onClick={(e) => handleSmoothScroll(e, '#footer')}
                 >
                   Contact
@@ -128,7 +129,7 @@ export default function Home() {
             <ul className="flex list-none flex-col items-center gap-6 py-6">
               <li>
                 <a
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  className="cursor-pointer py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
                   onClick={scrollToTop}
                 >
                   Home
@@ -136,7 +137,7 @@ export default function Home() {
               </li>
               <li>
                 <a
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  className="cursor-pointer py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
                   onClick={(e) => handleSmoothScroll(e, '#feature')}
                 >
                   About
@@ -144,7 +145,7 @@ export default function Home() {
               </li>
               <li>
                 <a
-                  className="py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14] cursor-pointer"
+                  className="cursor-pointer py-1 font-bold transition hover:border-b-2 hover:border-[#39ff14]"
                   onClick={(e) => handleSmoothScroll(e, '#footer')}
                 >
                   Contact
@@ -176,17 +177,17 @@ export default function Home() {
               style={{ fontFamily: 'Rochester, cursive', fontWeight: 300 }}
             >
               Avoid potholes, rough roads, and unexpected hazards with
-              intellignet route optimization.
+              intelligent route optimization.
             </p>
 
             <div className="btn-container mt-8 flex justify-center gap-6 md:justify-start">
               <Link
                 to="/home"
-                className="inline-block rounded-md bg-[#39ff14] px-8 py-3 text-center text-xl text-white animate-pulse"
+                className="inline-block animate-pulse rounded-md bg-[#39ff14] px-8 py-3 text-center text-xl text-white"
               >
                 Get Started
               </Link>
-              <button 
+              <button
                 className="flex items-center gap-2 rounded-md bg-[#39ff14] px-6 py-3 text-xl text-white transition hover:bg-white hover:text-[#39ff14]"
                 onClick={(e) => handleSmoothScroll(e, '#feature')}
               >
@@ -453,24 +454,35 @@ export default function Home() {
         </h1>
         <div className="testimonial-container grid grid-cols-1 gap-6 md:grid-cols-2">
           {homeData.testimonials.map((testimonial, index) => (
-            <div key={index} className="rounded-2xl bg-[#004225] p-8 text-white shadow-lg flex flex-col">
-              <h2 className="mb-4 text-2xl text-[#39ff14]">{testimonial.name}</h2>
-              <div className="testimony leading-relaxed flex-grow">
+            <div
+              key={index}
+              className="flex flex-col rounded-2xl bg-[#004225] p-8 text-white shadow-lg"
+            >
+              <h2 className="mb-4 text-2xl text-[#39ff14]">
+                {testimonial.name}
+              </h2>
+              <div className="testimony flex-grow leading-relaxed">
                 {expandedTestimonials[index] ? (
                   testimonial.feedbacks.map((feedback, idx) => (
                     <p key={idx} className="mb-4">
-                      <span dangerouslySetInnerHTML={{ __html: feedback }}></span>
+                      <span
+                        dangerouslySetInnerHTML={{ __html: feedback }}
+                      ></span>
                     </p>
                   ))
                 ) : (
                   <p className="mb-4 line-clamp-4">
-                    <span dangerouslySetInnerHTML={{ __html: testimonial.feedbacks[0] }}></span>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: testimonial.feedbacks[0],
+                      }}
+                    ></span>
                   </p>
                 )}
               </div>
-              <button 
+              <button
                 onClick={() => toggleTestimonial(index)}
-                className="mt-6 rounded-full border bg-white px-6 py-2 italic text-[#004225] transition hover:bg-transparent hover:text-[#39ff14] self-start"
+                className="mt-6 self-start rounded-full border bg-white px-6 py-2 italic text-[#004225] transition hover:bg-transparent hover:text-[#39ff14]"
               >
                 {expandedTestimonials[index] ? 'See Less' : 'See More'}
               </button>
@@ -487,31 +499,61 @@ export default function Home() {
           </h1>
         </div>
 
-        <div className="form w-full rounded bg-white/80 p-6 text-center md:w-1/2">
-          <h2 className="text-3xl text-[#004225]">BOOK NOW</h2>
+        <div className="form flex w-full flex-col gap-3 rounded bg-white/80 p-6 text-center md:w-1/2">
+          <h2 className="text-3xl text-[#004225]">Jon our happy users.</h2>
           <p className="text-sm italic text-[#004225]">Take your drive safe</p>
-          <input
-            className="mt-4 w-full rounded border-none bg-[#004225] p-3 text-white placeholder-white focus:outline-2 focus:outline-[#004225]"
-            type="text"
-            placeholder="Name"
-          />
-          <input
-            className="mt-4 w-full rounded border-none bg-[#004225] p-3 text-white placeholder-white focus:outline-2 focus:outline-[#004225]"
-            type="text"
-            placeholder="Email"
-          />
-          <input
-            className="mt-4 w-full rounded border-none bg-[#004225] p-3 text-white placeholder-white focus:outline-2 focus:outline-[#004225]"
-            type="tel"
-            placeholder="Phone Number"
-          />
+          <div className="flex flex-col">
+            <div className="flex gap-2">
+              <p>Buyer Name </p> <span className="text-red-500">*</span>
+            </div>
+            <input
+              className=" w-full rounded border border-[#004225] p-3 text-[#004225] placeholder-[#004225] focus:outline-2 focus:outline-[#004225]"
+              type="text"
+              placeholder="Name"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <div className="flex gap-2">
+              <p>Email Address </p> <span className="text-red-500">*</span>
+            </div>
+            <input
+              className=" w-full rounded border border-[#004225] p-3 text-[#004225] placeholder-[#004225] focus:outline-2 focus:outline-[#004225]"
+              type="email"
+              placeholder="Enter Email Address"
+            />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex flex-col">
+              <div className="flex gap-2">
+                <p>Phone Number </p> <span className="text-red-500">*</span>
+              </div>
+              <input
+                className=" w-full rounded border border-[#004225] p-3 text-[#004225] placeholder-[#004225] focus:outline-2 focus:outline-[#004225]"
+                type="tel"
+                placeholder="Enter Phone number"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <div className="flex gap-2">
+                <p>Quantity </p> <span className="text-red-500">*</span>
+              </div>
+              <input
+                className=" w-full rounded border border-[#004225] p-3 text-[#004225] placeholder-[#004225] focus:outline-2 focus:outline-[#004225]"
+                type="number"
+                placeholder="Enter Quantity"
+              />
+            </div>
+          </div>
           <div className="mt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
             <p className="flex items-center gap-2 text-sm italic text-[#004225]">
               <FaInfoCircle className="text-[#004225]" /> Your information is
               safe with us, secured by advanced encryption.
             </p>
-            <button className="rounded border-2 border-[#004225] px-6 py-3 text-[#004225] transition hover:bg-[#004225] hover:text-white">
-              Get a device
+            <button className="text-nowrap rounded border-2 border-[#004225] px-6 py-3 text-[#004225] transition hover:bg-[#004225] hover:text-white">
+              Get device
             </button>
           </div>
         </div>
@@ -522,7 +564,16 @@ export default function Home() {
         className="mt-20 rounded-t-3xl bg-[#004225] px-6 py-10 text-white md:px-20"
       >
         <div className="details flex flex-col items-center justify-between gap-6 md:flex-row">
-          <div className="download flex items-center gap-6">
+          <h3 className="text-3xl">
+            <span
+              style={{ fontFamily: 'Rochester, cursive' }}
+              className="text-4xl text-[#39ff14]"
+            >
+              Smart
+            </span>
+            <span className="ml-2">Route</span>
+          </h3>
+          {/* <div className="download flex items-center gap-6">
             <div className="flex items-center gap-4 rounded border border-white px-4 py-2">
               <FaApple className="text-xl" />
               <div>
@@ -538,23 +589,30 @@ export default function Home() {
                 <h4 className="text-lg">Play Store</h4>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="socials flex items-center gap-4">
-            <a href="#" className="text-xl text-white">
+            {/* <a href="#" className="text-xl text-white">
               <FaFacebook />
-            </a>
-            <a href="#" className="text-xl text-white">
+            </a> */}
+            {/* <a href="#" className="text-xl text-white">
               <FaTwitter />
-            </a>
-            <a href="#" className="text-xl text-white">
+            </a> */}
+            {/* <a href="#" className="text-xl text-white">
               <FaInstagram />
-            </a>
-            <a href="#" className="text-xl text-white">
+            </a> */}
+            <a
+              href="https://www.linkedin.com/company/smart-systems-research-laboratory/"
+              target="blank"
+              className="text-xl text-white"
+            >
               <FaLinkedin />
             </a>
-            <a href="#" className="text-xl text-white">
+            {/* <a href="#" className="text-xl text-white">
               <FaEnvelope />
+            </a> */}
+            <a href="tel:+2347067060287" className="text-xl text-white">
+              <FaPhone />
             </a>
           </div>
         </div>
@@ -568,7 +626,7 @@ export default function Home() {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[#37ff14ba] text-white shadow-lg transition hover:bg-[#004225] hover:scale-110"
+          className="fixed bottom-8 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[#37ff14ba] text-white shadow-lg transition hover:scale-110 hover:bg-[#004225]"
           aria-label="Scroll to top"
         >
           <FaArrowUp className="text-xl" />
