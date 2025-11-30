@@ -74,7 +74,7 @@ export default function MailForm() {
   const sendEmail = async (e) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
+    // if (!validateForm()) return;
     
     // Check if EmailJS is configured
     if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
@@ -87,26 +87,37 @@ export default function MailForm() {
     console.log('Sending email with data:', formData);
     
     try {
-      // Send email using the exact template parameters from your EmailJS template
+      // Send email using the exact template structure from EmailJS
+      const orderData = {
+        order_id: `SR-${Date.now()}`,
+        orders: [
+          {
+            name: `Contact Form: ${formData.subject || 'General Inquiry'}`,
+            units: 1,
+            price: 0,
+            image_url: 'https://via.placeholder.com/64x64/004225/ffffff?text=SR'
+          }
+        ],
+        cost: {
+          shipping: 0,
+          tax: 0,
+          total: 0
+        },
+        email: formData.email,
+        // Additional contact form data
+        customer_name: formData.name,
+        customer_email: formData.email,
+        customer_phone: formData.phone || 'Not provided',
+        customer_message: formData.message,
+        inquiry_subject: formData.subject || 'General Inquiry'
+      };
+
+      console.log('Sending order data:', orderData);
+
       const result = await emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
-        {
-          order_id: `SR-${Date.now()}`,
-          orders: `Contact Form Submission from ${formData.name}`,
-          image_url: 'https://smartroute.com/logo.png', // You can replace with actual logo
-          name: formData.name,
-          units: formData.subject || 'General Inquiry',
-          price: 'Free Consultation',
-          cost: 'No charge',
-          email: formData.email,
-          phone: formData.phone || 'Not provided',
-          message: formData.message,
-          // Additional useful fields
-          customer_name: formData.name,
-          customer_email: formData.email,
-          reply_to: formData.email
-        },
+        orderData,
         PUBLIC_KEY
       );
 
