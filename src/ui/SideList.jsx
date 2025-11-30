@@ -403,7 +403,7 @@ export default function SideList({ closeSidebar }) {
                       <button
                         type="button"
                         onClick={handleUseCurrentLocation}
-                        className="text-xs font-semibold text-green-600 hover:underline"
+                        className="text-xs font-semibold text-green-600 hover:underline animate-bounce"
                       >
                         Use current location
                       </button>
