@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
 import { FaPaperPlane, FaUser, FaEnvelope, FaPhone, FaComment } from 'react-icons/fa';
@@ -14,10 +14,22 @@ export default function MailForm() {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  // EmailJS configuration - Replace with your actual values
-  const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'your_service_id';
-  const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'your_template_id';
-  const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'your_public_key';
+  // EmailJS configuration - Using your actual values
+  const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+  const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+  // Initialize EmailJS
+  useEffect(() => {
+    console.log('EmailJS Config Check:', {
+      SERVICE_ID,
+      TEMPLATE_ID,
+      PUBLIC_KEY: PUBLIC_KEY ? 'Set' : 'Missing'
+    });
+    if (PUBLIC_KEY) {
+      emailjs.init(PUBLIC_KEY);
+    }
+  }, [PUBLIC_KEY]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,38 +76,41 @@ export default function MailForm() {
     
     if (!validateForm()) return;
     
+    // Check if EmailJS is configured
+    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+      toast.error('Email service not properly configured');
+      console.error('Missing EmailJS configuration:', { SERVICE_ID, TEMPLATE_ID, PUBLIC_KEY });
+      return;
+    }
+    
     setIsLoading(true);
+    console.log('Sending email with data:', formData);
     
     try {
-      // Send email to your inbox
-      await emailjs.send(
+      // Send email using the exact template parameters from your EmailJS template
+      const result = await emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
         {
-          from_name: formData.name,
-          from_email: formData.email,
-          phone: formData.phone,
-          subject: formData.subject || 'New Contact Form Submission',
+          order_id: `SR-${Date.now()}`,
+          orders: `Contact Form Submission from ${formData.name}`,
+          image_url: 'https://smartroute.com/logo.png', // You can replace with actual logo
+          name: formData.name,
+          units: formData.subject || 'General Inquiry',
+          price: 'Free Consultation',
+          cost: 'No charge',
+          email: formData.email,
+          phone: formData.phone || 'Not provided',
           message: formData.message,
-          to_email: 'your-email@example.com', // Replace with your email
+          // Additional useful fields
+          customer_name: formData.name,
+          customer_email: formData.email,
           reply_to: formData.email
         },
         PUBLIC_KEY
       );
 
-      // Send confirmation email to user
-      await emailjs.send(
-        SERVICE_ID,
-        'template_confirmation', // You'll need to create this template
-        {
-          to_name: formData.name,
-          to_email: formData.email,
-          from_name: 'SmartRoute Team',
-          message: `Dear ${formData.name},\n\nThank you for contacting SmartRoute! We have received your message and will get back to you within 24 hours.\n\nBest regards,\nSmartRoute Team`
-        },
-        PUBLIC_KEY
-      );
-
+      console.log('Email sent successfully:', result);
       toast.success('Message sent successfully! We\'ll get back to you soon.');
       
       // Reset form
@@ -107,14 +122,9 @@ export default function MailForm() {
         message: ''
       });
       
-      // Reset form ref
-      if (form.current) {
-        form.current.reset();
-      }
-      
     } catch (error) {
       console.error('Error sending email:', error);
-      toast.error('Failed to send message. Please try again later.');
+      toast.error(`Failed to send message: ${error.text || error.message || 'Please try again later.'}`);
     } finally {
       setIsLoading(false);
     }
