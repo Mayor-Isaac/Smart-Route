@@ -6,7 +6,7 @@ export const anomalies = [
     status: 'bad',
     timestamp: '2025-05-12T09:00:00Z',
     description:
-      'Massive crater disguised as a pothole at FUTA North Gate. Perfect for testing your suspension... or destroying it. 🚗💥',
+      'Massive crater disguised as a pothole at FUTA North Gate. Perfect for testing your suspension... or destroying it.',
   },
   {
     lat: 7.3122,
@@ -15,7 +15,7 @@ export const anomalies = [
     status: 'bad',
     timestamp: '2025-05-12T09:05:00Z',
     description:
-      'Obanla Road looking like a broken puzzle. Your car will feel every crack in its soul. Massage therapy for vehicles not included. 😵‍💫',
+      'Obanla Road looking like a broken puzzle. Your car will feel every crack in its soul. Massage therapy for vehicles not included.',
   },
   {
     lat: 7.313,
@@ -24,7 +24,7 @@ export const anomalies = [
     status: 'good',
     timestamp: '2025-05-12T09:10:00Z',
     description:
-      'Unicorn spotted! Actually smooth road near Senate building. Pinch yourself - this might be a dream. 🦄✨',
+      'Unicorn spotted! Actually smooth road near Senate building. Pinch yourself - this might be a dream. ',
   },
   {
     lat: 7.314,
@@ -33,7 +33,7 @@ export const anomalies = [
     status: 'warning',
     timestamp: '2025-05-12T09:15:00Z',
     description:
-      'Invisible speed bump at Hilltop junction - a ninja in disguise. Good luck spotting it at night, brave warrior. 🥷',
+      'Invisible speed bump at Hilltop junction - a ninja in disguise. Good luck spotting it at night, brave warrior. ',
   },
   {
     lat: 7.3145,
@@ -42,7 +42,7 @@ export const anomalies = [
     status: 'good',
     timestamp: '2025-05-12T09:20:00Z',
     description:
-      'Another miracle! Clean road near Students Union. Probably the work of wizards or very generous contractors. 🪄',
+      'Another miracle! Clean road near Students Union. Probably the work of wizards or very generous contractors. ',
   },
   {
     lat: 7.315,
@@ -51,7 +51,7 @@ export const anomalies = [
     status: 'bad',
     timestamp: '2025-05-12T09:25:00Z',
     description:
-      'The Grand Canyon of potholes at rear gate. Bring climbing gear and maybe a parachute. RIP to fallen tires. ⚰️🛞',
+      'The Grand Canyon of potholes at rear gate. Bring climbing gear and maybe a parachute. RIP to fallen tires. ',
   },
   {
     lat: 7.3109,
@@ -59,7 +59,7 @@ export const anomalies = [
     anomaly: 'erosion patches',
     status: 'warning',
     timestamp: '2025-05-12T08:55:00Z',
-    description: 'Nature is slowly reclaiming this road at Hilltop. Earth says "mine now!" 🌍👑',
+    description: 'Nature is slowly reclaiming this road at Hilltop. Earth says "mine now!" ',
   },
   {
     lat: 7.3094,
@@ -67,7 +67,7 @@ export const anomalies = [
     anomaly: 'smooth road',
     status: 'good',
     timestamp: '2025-05-12T08:35:00Z',
-    description: 'Fresh tar at Alumni Junction - someone actually cared! Treat it like the precious gem it is. 💎',
+    description: 'Fresh tar at Alumni Junction - someone actually cared! Treat it like the precious gem it is. ',
   },
   {
     lat: 7.3099,
@@ -75,7 +75,7 @@ export const anomalies = [
     anomaly: 'pothole',
     status: 'bad',
     timestamp: '2025-05-12T08:45:00Z',
-    description: 'Awolowo Hall presents: The Swimming Pool Experience! Perfect for amphibious vehicles only. 🏊‍♂️🐸',
+    description: 'Awolowo Hall presents: The Swimming Pool Experience! Perfect for amphibious vehicles only. ',
   },
   {
     lat: 7.3101,
@@ -83,6 +83,6 @@ export const anomalies = [
     anomaly: 'Speed bumps and cracks',
     status: 'warning',
     timestamp: '2025-05-12T08:25:00Z',
-    description: 'Lecture Theatre road doubles as a vibration therapy center. Your car will get a full-body massage! 💆‍♂️🚗',
+    description: 'Lecture Theatre road doubles as a vibration therapy center. Your car will get a full-body massage! ',
   },
 ];
