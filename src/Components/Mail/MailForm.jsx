@@ -9,8 +9,12 @@ export default function MailForm() {
     name: '',
     email: '',
     phone: '',
-    subject: '',
-    message: ''
+      price: 0,
+    cost: {
+      shipping: 0,
+        tax: 0,
+        total: 0
+    }
   });
   const [isLoading, setIsLoading] = useState(false);
 
