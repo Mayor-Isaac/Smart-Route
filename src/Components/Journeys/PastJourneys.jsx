@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { anomalies } from '../../services/anomalies'
 import { journeys } from '../../services/journeys';
+import {useFetch} from "../../utils/useFetch"
 import { CgClose } from 'react-icons/cg';
 
 export default function PastJourneys() {
   const [showDetails, setShowDetails] = useState(false)
   const [selectedRowData, setSelectedRowData] = useState(null)
   const [locationNames, setLocationNames] = useState({})
+
+  const {data} = useFetch()
     
     // Use geocoding to get location names from coordinates
     const getLocationName = async (lat, lng) => {
