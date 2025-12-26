@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { anomalies } from '../../services/anomalies'
 import { journeys } from '../../services/journeys';
-import {useFetch} from "../../utils/useFetch"
+import useFetch from "../../utils/useFetch"
 import { CgClose } from 'react-icons/cg';
 import { getAnomalies } from '../../services/apis';
 
