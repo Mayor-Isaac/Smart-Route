@@ -364,7 +364,7 @@ export default function SideList({ closeSidebar }) {
   }
 
   return (
-    <div className="h-[93%] overflow-y-auto p-4">
+    <div className="h-[93%] overflow-y-auto p-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-green-600 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-green-700">
       {items.map((item, index) => {
         return (
           <div className={`relative mb-4 border-b border-green-300`} key={index}>
