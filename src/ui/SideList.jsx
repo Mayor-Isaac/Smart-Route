@@ -44,16 +44,16 @@ export default function SideList({ closeSidebar }) {
       routes: ['Route 1', 'Route 2', 'Route 3'],
     },
     {
-      header: 'Profile',
-      navItems: ['Name', 'Car Type'],
+      header: 'Dashboard',
+      navItems: ['Overview', 'Statistics'],
     },
     {
-      header: 'Analysis',
-      navItems: ['General Anomalies'],
+      header: 'Anomalies',
+      navItems: ['View All Anomalies', 'Report Anomaly'],
     },
     {
-      header: 'Tracking',
-      navItems: ['Past Journeys', 'Last Seen Location'],
+      header: 'Journeys',
+      navItems: ['View Map', 'Past Journeys', 'Last Seen Location'],
     },
     {
       header: 'Settings',
@@ -326,12 +326,24 @@ export default function SideList({ closeSidebar }) {
       case 'About':
         handleAboutClick();
         break;
-      case 'General Anomalies':
+      case 'View All Anomalies':
         handleGeneralAnomaliesClick();
         break;
-          case 'Past Journeys':
-            handlePastJourneysClick();
-            break;
+      case 'Past Journeys':
+        handlePastJourneysClick();
+        break;
+      case 'Overview':
+      case 'Statistics':
+        navigate('/home');
+        closeSidebar();
+        break;
+      case 'View Map':
+        navigate('/home/map');
+        closeSidebar();
+        break;
+      case 'Report Anomaly':
+        toast.info('Report Anomaly feature coming soon!');
+        break;
       case 'Last Seen Location':
         if (lastSeenLocationName) {
           toast.success(`Your last seen location is ${lastSeenLocationName}`);

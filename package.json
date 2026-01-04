@@ -1,7 +1,8 @@
 {
   "name": "smart-route",
+  "description": "Smart Road Anomaly Detection System - A web application for detecting, tracking, and navigating around road anomalies in real-time",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
