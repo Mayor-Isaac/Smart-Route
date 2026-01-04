@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { anomalies } from '../../services/anomalies'
 import { journeys } from '../../services/journeys'
-import { FaExclamationTriangle, FaRoute, FaMapMarkerAlt, FaCheckCircle } from 'react-icons/fa'
+import { FaExclamationTriangle, FaRoute, FaMapMarkerAlt, FaCheckCircle, FaBell, FaCloudSun, FaVolumeUp, FaMapPin } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
+import LiveTracking from '../../Components/Tracking/LiveTracking'
+import voiceNavigation from '../../services/voiceNavigation'
+import toast from 'react-hot-toast'
 
 export default function Dashboard() {
   const navigate = useNavigate()
@@ -105,6 +108,68 @@ export default function Dashboard() {
           <h3 className="font-bold text-lg">Past Journeys</h3>
           <p className="text-sm mt-2">Review journey history</p>
         </button>
+      </div>
+
+      {/* New Features Section */}
+      <div className="mb-8">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">🆕 New Features</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <button
+            onClick={() => {
+              toast.info('Tap SOS Alert 3 times quickly in sidebar for emergency', {
+                duration: 4000,
+                icon: '🚨',
+              });
+            }}
+            className="bg-red-500 hover:bg-red-600 text-white rounded-lg p-4 shadow-md transition-all text-left"
+          >
+            <FaBell className="text-2xl mb-2" />
+            <h4 className="font-bold">Emergency SOS</h4>
+            <p className="text-xs mt-1 opacity-90">Quick emergency alert</p>
+          </button>
+
+          <button
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('smartroute:toggle-weather'));
+              toast.success('Weather overlay toggled on map');
+            }}
+            className="bg-sky-500 hover:bg-sky-600 text-white rounded-lg p-4 shadow-md transition-all text-left"
+          >
+            <FaCloudSun className="text-2xl mb-2" />
+            <h4 className="font-bold">Weather Data</h4>
+            <p className="text-xs mt-1 opacity-90">Satellite weather info</p>
+          </button>
+
+          <button
+            onClick={() => {
+              const enabled = voiceNavigation.isEnabled();
+              if (enabled) {
+                voiceNavigation.disable();
+                toast.success('Voice navigation disabled', { icon: '🔇' });
+              } else {
+                voiceNavigation.enable();
+                voiceNavigation.test();
+                toast.success('Voice navigation enabled', { icon: '🔊' });
+              }
+            }}
+            className="bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg p-4 shadow-md transition-all text-left"
+          >
+            <FaVolumeUp className="text-2xl mb-2" />
+            <h4 className="font-bold">Voice Navigation</h4>
+            <p className="text-xs mt-1 opacity-90">Turn-by-turn guidance</p>
+          </button>
+
+          <div className="bg-orange-500 text-white rounded-lg p-4 shadow-md text-left">
+            <FaMapPin className="text-2xl mb-2" />
+            <h4 className="font-bold">Live Tracking</h4>
+            <p className="text-xs mt-1 opacity-90">Share your location</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Live Tracking Component */}
+      <div className="mb-8">
+        <LiveTracking />
       </div>
 
       {/* Recent Anomalies */}

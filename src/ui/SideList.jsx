@@ -14,6 +14,8 @@ export default function SideList({ closeSidebar }) {
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [lastSeenLocationName, setLastSeenLocationName] = useState(null);
+  const [emergencyTapCount, setEmergencyTapCount] = useState(0);
+  const [emergencyTimeout, setEmergencyTimeout] = useState(null);
 
   const navigate = useNavigate()
 
@@ -39,6 +41,11 @@ export default function SideList({ closeSidebar }) {
       button: 'Start a journey',
     },
     {
+      header: 'Emergency & Safety',
+      navItems: ['SOS Alert', 'Emergency Contacts'],
+      emergency: true,
+    },
+    {
       header: 'Alternative Routes',
       disabled: true,
       routes: ['Route 1', 'Route 2', 'Route 3'],
@@ -56,8 +63,12 @@ export default function SideList({ closeSidebar }) {
       navItems: ['View Map', 'Past Journeys', 'Last Seen Location'],
     },
     {
+      header: 'Weather & Traffic',
+      navItems: ['Weather Overlay', 'Live Tracking'],
+    },
+    {
       header: 'Settings',
-      navItems: ['Dark/Light Mode', 'Turn On Location'],
+      navItems: ['Dark/Light Mode', 'Turn On Location', 'Voice Navigation'],
     },
     {
       header: 'Help',
@@ -258,6 +269,61 @@ export default function SideList({ closeSidebar }) {
       navigate('/');
   }
 
+  // Emergency SOS handler with repetitive tap feature
+  function handleEmergencySOS() {
+    const newCount = emergencyTapCount + 1;
+    setEmergencyTapCount(newCount);
+
+    // Clear existing timeout
+    if (emergencyTimeout) {
+      clearTimeout(emergencyTimeout);
+    }
+
+    // Reset count after 2 seconds of no taps
+    const timeout = setTimeout(() => {
+      setEmergencyTapCount(0);
+    }, 2000);
+    setEmergencyTimeout(timeout);
+
+    // Trigger emergency after 3 rapid taps
+    if (newCount >= 3) {
+      setEmergencyTapCount(0);
+      clearTimeout(timeout);
+      
+      // Trigger emergency alert
+      if (userLocation) {
+        toast.error('🚨 EMERGENCY SOS ACTIVATED! Notifying nearby users and authorities...', {
+          duration: 6000,
+          style: {
+            background: '#DC2626',
+            color: 'white',
+            fontWeight: 'bold',
+          },
+        });
+        
+        // Dispatch emergency event
+        window.dispatchEvent(
+          new CustomEvent('smartroute:emergency', {
+            detail: {
+              location: userLocation,
+              timestamp: new Date().toISOString(),
+              type: 'SOS',
+            },
+          })
+        );
+      } else {
+        toast.error('Location required for emergency alert. Please enable location services.', {
+          duration: 4000,
+        });
+      }
+    } else {
+      toast(`Tap ${3 - newCount} more time${3 - newCount > 1 ? 's' : ''} quickly for SOS`, {
+        duration: 1000,
+        icon: '⚠️',
+      });
+    }
+  }
+
   function handleGeneralAnomaliesClick() {
     navigate('/home/all-anomalies');
     closeSidebar();
@@ -344,6 +410,40 @@ export default function SideList({ closeSidebar }) {
       case 'Report Anomaly':
         toast.info('Report Anomaly feature coming soon!');
         break;
+      case 'SOS Alert':
+        handleEmergencySOS();
+        break;
+      case 'Emergency Contacts':
+        toast.info('Emergency Contacts: Police - 112, Ambulance - 911', {
+          duration: 5000,
+          icon: '📞',
+        });
+        break;
+      case 'Weather Overlay':
+        toast.info('Weather overlay will be displayed on the map', {
+          icon: '🌤️',
+        });
+        // Dispatch event to toggle weather overlay
+        window.dispatchEvent(new CustomEvent('smartroute:toggle-weather'));
+        closeSidebar();
+        navigate('/home/map');
+        break;
+      case 'Live Tracking':
+        toast.info('Live tracking feature - Share your location with trusted contacts', {
+          icon: '📍',
+        });
+        break;
+      case 'Voice Navigation':
+        toast.info('Voice navigation will be enabled for your next journey', {
+          icon: '🔊',
+        });
+        // Toggle voice navigation in localStorage
+        const voiceEnabled = localStorage.getItem('voiceNavigation') === 'true';
+        localStorage.setItem('voiceNavigation', !voiceEnabled ? 'true' : 'false');
+        toast.success(`Voice navigation ${!voiceEnabled ? 'enabled' : 'disabled'}`, {
+          icon: !voiceEnabled ? '🔊' : '🔇',
+        });
+        break;
       case 'Last Seen Location':
         if (lastSeenLocationName) {
           toast.success(`Your last seen location is ${lastSeenLocationName}`);
@@ -373,6 +473,9 @@ export default function SideList({ closeSidebar }) {
                 className={(() => {
                   if (item.header === 'Alternative Routes') {
                     return 'font-bold text-green-300 opacity-60 select-none cursor-not-allowed';
+                  }
+                  if (item.emergency) {
+                    return 'font-bold text-red-600 uppercase';
                   }
                   return `font-bold text-green-600 ${
                     item.routes &&
@@ -437,13 +540,18 @@ export default function SideList({ closeSidebar }) {
               </button>
             )}
             {item.navItems?.map((navItem, key) => {
+              const isEmergency = item.emergency;
               return (
                 <div key={key} className="pl-8">
                   <p 
-                    className="cursor-pointer text-green-500 transition hover:font-bold hover:text-green-600 hover:underline flex items-center justify-between"
+                    className={`cursor-pointer transition hover:font-bold hover:underline flex items-center justify-between ${
+                      isEmergency 
+                        ? 'text-red-600 hover:text-red-700 font-semibold' 
+                        : 'text-green-500 hover:text-green-600'
+                    } ${navItem === 'SOS Alert' ? 'animate-pulse' : ''}`}
                     onClick={() => handleNavItemClick(navItem)}
                   >
-                    <span>{navItem}</span>
+                    <span>{navItem === 'SOS Alert' ? '🚨 ' + navItem : navItem}</span>
                     {navItem === 'Dark/Light Mode' && (
                       <span className="text-xs">
                         {/* {isDarkMode ? '🌙' : '☀️'} */}
