@@ -1,6 +1,8 @@
 import { HiMenu } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
 export default function Header({ toggleSidebar }) {
+  const navigate = useNavigate();
   const currHour = new Date().getHours();
   const greetings =
     currHour < 12
@@ -11,7 +13,13 @@ export default function Header({ toggleSidebar }) {
 
   return (
     <div className="flex items-center justify-between px-2  py-4 ">
-      <h1 className=" text-base font-bold uppercase">Smart Route</h1>
+      <h1 
+        className="text-base font-bold uppercase cursor-pointer hover:text-green-600 transition"
+        onClick={() => navigate('/')}
+        title="Go to Home"
+      >
+        Smart Route
+      </h1>
       <div className="flex items-center gap-20">
         <p>
           Good {greetings}{' '}
