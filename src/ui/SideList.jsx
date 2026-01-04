@@ -230,7 +230,7 @@ export default function SideList({ closeSidebar }) {
     if (closeSidebar) {
       closeSidebar();
     }
-    navigate('/home');
+    navigate('/home/map');
   }
 
   function handleRouteSelect() {
