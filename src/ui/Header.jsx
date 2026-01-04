@@ -1,4 +1,8 @@
+import { AiOutlineCaretLeft } from "react-icons/ai";
+import { BiCaretRight } from "react-icons/bi";
+import { FaArrowLeft } from "react-icons/fa6";
 import { HiMenu } from "react-icons/hi";
+import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export default function Header({ toggleSidebar }) {
@@ -10,14 +14,15 @@ export default function Header({ toggleSidebar }) {
       : currHour >= 12 && currHour < 17
       ? 'Afternoon'
         : 'Evening';
+  const location = useLocation();
 
   return (
     <div className="flex items-center justify-between px-2  py-4 ">
       <h1 
-        className="text-base font-bold uppercase cursor-pointer hover:text-green-600 transition"
-        onClick={() => navigate('/')}
-        title="Go to Home"
+        className="text-base font-bold uppercase flex items-center gap-3 cursor-pointer transition"
+        
       >
+        {location.pathname !== "/home" && <span className="hover:text-green-600 animate-pulse" onClick={()=> navigate(-1)} ><FaArrowLeft /></span>}
         Smart Route
       </h1>
       <div className="flex items-center gap-20">

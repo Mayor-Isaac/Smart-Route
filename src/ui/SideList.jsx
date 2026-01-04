@@ -364,7 +364,7 @@ export default function SideList({ closeSidebar }) {
   }
 
   return (
-    <div className="scrollbar-hide h-[93%] overflow-y-auto p-4">
+    <div className="h-[93%] overflow-y-auto p-4">
       {items.map((item, index) => {
         return (
           <div className={`relative mb-4 border-b border-green-300`} key={index}>
