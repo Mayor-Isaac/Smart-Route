@@ -112,11 +112,11 @@ export default function Dashboard() {
 
       {/* New Features Section */}
       <div className="mb-8">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">🆕 New Features</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-4">New Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <button
             onClick={() => {
-              toast.info('Tap SOS Alert 3 times quickly in sidebar for emergency', {
+              toast('Tap SOS Alert 3 times quickly in sidebar for emergency', {
                 duration: 4000,
                 icon: '🚨',
               });
