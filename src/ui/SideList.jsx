@@ -408,19 +408,21 @@ export default function SideList({ closeSidebar }) {
         closeSidebar();
         break;
       case 'Report Anomaly':
-        toast.info('Report Anomaly feature coming soon!');
+        toast('Report Anomaly feature coming soon!', {
+          icon: '📝',
+        });
         break;
       case 'SOS Alert':
         handleEmergencySOS();
         break;
       case 'Emergency Contacts':
-        toast.info('Emergency Contacts: Police - 112, Ambulance - 911', {
+        toast('Emergency Contacts: Police - 112, Ambulance - 911', {
           duration: 5000,
           icon: '📞',
         });
         break;
       case 'Weather Overlay':
-        toast.info('Weather overlay will be displayed on the map', {
+        toast('Weather overlay will be displayed on the map', {
           icon: '🌤️',
         });
         // Dispatch event to toggle weather overlay
@@ -429,18 +431,17 @@ export default function SideList({ closeSidebar }) {
         navigate('/home/map');
         break;
       case 'Live Tracking':
-        toast.info('Live tracking feature - Share your location with trusted contacts', {
+        toast('Live tracking feature - Share your location with trusted contacts', {
           icon: '📍',
         });
+        navigate('/home');
+        closeSidebar();
         break;
       case 'Voice Navigation':
-        toast.info('Voice navigation will be enabled for your next journey', {
-          icon: '🔊',
-        });
         // Toggle voice navigation in localStorage
         const voiceEnabled = localStorage.getItem('voiceNavigation') === 'true';
         localStorage.setItem('voiceNavigation', !voiceEnabled ? 'true' : 'false');
-        toast.success(`Voice navigation ${!voiceEnabled ? 'enabled' : 'disabled'}`, {
+        toast(`Voice navigation ${!voiceEnabled ? 'enabled' : 'disabled'}`, {
           icon: !voiceEnabled ? '🔊' : '🔇',
         });
         break;
