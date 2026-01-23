@@ -17,7 +17,7 @@ export default function Header({ toggleSidebar }) {
   const location = useLocation();
 
   return (
-    <div className="flex items-center justify-between px-2  py-4 ">
+    <div className="flex items-center justify-between px-2 border  py-4 ">
       <h1 
         className="text-base font-bold uppercase flex items-center gap-3 cursor-pointer transition"
         
