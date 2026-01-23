@@ -1,3 +1,4 @@
+
 export const anomalies = [
   {
     lat: 7.312,
@@ -59,7 +60,8 @@ export const anomalies = [
     anomaly: 'erosion patches',
     status: 'warning',
     timestamp: '2025-05-12T08:55:00Z',
-    description: 'Nature is slowly reclaiming this road at Hilltop. Earth says "mine now!" ',
+    description:
+      'Nature is slowly reclaiming this road at Hilltop. Earth says "mine now!" ',
   },
   {
     lat: 7.3094,
@@ -67,7 +69,8 @@ export const anomalies = [
     anomaly: 'smooth road',
     status: 'good',
     timestamp: '2025-05-12T08:35:00Z',
-    description: 'Fresh tar at Alumni Junction - someone actually cared! Treat it like the precious gem it is. ',
+    description:
+      'Fresh tar at Alumni Junction - someone actually cared! Treat it like the precious gem it is. ',
   },
   {
     lat: 7.3099,
@@ -75,7 +78,8 @@ export const anomalies = [
     anomaly: 'pothole',
     status: 'bad',
     timestamp: '2025-05-12T08:45:00Z',
-    description: 'Awolowo Hall presents: The Swimming Pool Experience! Perfect for amphibious vehicles only. ',
+    description:
+      'Awolowo Hall presents: The Swimming Pool Experience! Perfect for amphibious vehicles only. ',
   },
   {
     lat: 7.3101,
@@ -83,6 +87,7 @@ export const anomalies = [
     anomaly: 'Speed bumps and cracks',
     status: 'warning',
     timestamp: '2025-05-12T08:25:00Z',
-    description: 'Lecture Theatre road doubles as a vibration therapy center. Your car will get a full-body massage! ',
+    description:
+      'Lecture Theatre road doubles as a vibration therapy center. Your car will get a full-body massage! ',
   },
 ];
